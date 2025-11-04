@@ -8,23 +8,23 @@ public class Event {
     private String name;
     private LocalDate date;
     private String hostName;
-    private LocalTime starTime;
+    private LocalTime startTime;
     private LocalTime endTime;
     private List<User> users;
     private List<Picture> pictures;
     private String location;
 
 
-    public Event(String name, LocalDate date, String hostName, LocalTime starTime, LocalTime endTime, List<User> users,
+    public Event(String name, LocalDate date, String hostName, LocalTime startTime, LocalTime endTime, List<User> users,
             List<Picture> pictures, String location) {
-        this.name = name;
-        this.date = date;
-        this.hostName = hostName;
-        this.starTime = starTime;
-        this.endTime = endTime;
-        this.users = users;
-        this.pictures = pictures;
-        this.location = location;
+                setDate(date);
+                setEndTime(endTime);
+                setStarTime(startTime);
+                setName(name);
+                setHostName(hostName);
+                setUsers(users);
+                setPictures(pictures);
+                setLocation(location);
     }
 
 
@@ -43,8 +43,8 @@ public class Event {
     }
 
 
-    public void setStarTime(LocalTime starTime) {
-        this.starTime = starTime;
+    public void setStarTime(LocalTime startTime) {
+        this.startTime = startTime;
     }
 
 
@@ -83,8 +83,8 @@ public class Event {
     }
 
 
-    public LocalTime getStarTime() {
-        return starTime;
+    public LocalTime getStartTime() {
+        return startTime;
     }
 
 

@@ -1,98 +1,162 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
+import React from 'react';
+import { StyleSheet, View, FlatList, Pressable, Text } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { EventCard, Event } from '@/components/event-card';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+import { Colors } from '@/constants/theme';
+
+// Mock data for demonstration
+const MOCK_EVENTS: Event[] = [
+  {
+    id: '1',
+    title: 'Birthday Party',
+    dateRange: 'Jun 12, 2025',
+    location: 'Brussels',
+    photoCount: 24,
+    thumbnails: [
+      'https://picsum.photos/200/200?random=1',
+      'https://picsum.photos/200/200?random=2',
+      'https://picsum.photos/200/200?random=3',
+      'https://picsum.photos/200/200?random=4',
+    ],
+  },
+  {
+    id: '2',
+    title: 'Weekend Trip',
+    dateRange: 'May 20-22, 2025',
+    location: 'Ghent',
+    photoCount: 56,
+    thumbnails: [
+      'https://picsum.photos/200/200?random=5',
+      'https://picsum.photos/200/200?random=6',
+      'https://picsum.photos/200/200?random=7',
+      'https://picsum.photos/200/200?random=8',
+    ],
+  },
+  {
+    id: '3',
+    title: 'Coffee Meetup',
+    dateRange: 'May 15, 2025',
+    photoCount: 8,
+    thumbnails: [
+      'https://picsum.photos/200/200?random=9',
+      'https://picsum.photos/200/200?random=10',
+    ],
+  },
+];
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? 'light'];
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  const handleEventPress = (event: Event) => {
+    // Navigate to event detail (to be implemented)
+    console.log('Event pressed:', event.title);
+  };
+
+  const handleCameraPress = () => {
+    // Open camera (to be implemented)
+    console.log('Camera pressed');
+  };
+
+  const renderEmptyState = () => (
+    <View style={styles.emptyContainer}>
+      <Text style={[styles.emptyIcon, { color: colors.icon }]}>📷</Text>
+      <ThemedText style={styles.emptyTitle}>No events yet</ThemedText>
+      <ThemedText style={[styles.emptySubtitle, { color: colors.icon }]}>
+        Take your first photo to get started
+      </ThemedText>
+    </View>
+  );
+
+  return (
+    <ThemedView style={styles.container}>
+      {/* Header */}
+      <View style={[styles.header, { backgroundColor: colors.background }]}>
+        <ThemedText type="title">EventSnap</ThemedText>
+      </View>
+
+      {/* Events List */}
+      <FlatList
+        data={MOCK_EVENTS}
+        renderItem={({ item }) => (
+          <EventCard event={item} onPress={() => handleEventPress(item)} />
+        )}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.listContent}
+        ListEmptyComponent={renderEmptyState}
+      />
+
+      {/* Floating Camera Button */}
+      <Pressable
+        style={({ pressed }) => [
+          styles.fab,
+          { backgroundColor: '#0066FF' },
+          pressed && styles.fabPressed,
+        ]}
+        onPress={handleCameraPress}>
+        <Text style={styles.fabIcon}>📷</Text>
+      </Pressable>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
   },
-  stepContainer: {
-    gap: 8,
+  header: {
+    paddingHorizontal: 20,
+    paddingTop: 60,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  listContent: {
+    paddingVertical: 8,
+    flexGrow: 1,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 32,
+    paddingVertical: 80,
+  },
+  emptyIcon: {
+    fontSize: 64,
+    marginBottom: 16,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: '600',
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
+  emptySubtitle: {
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  fab: {
     position: 'absolute',
+    right: 20,
+    bottom: 32,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  fabPressed: {
+    opacity: 0.8,
+    transform: [{ scale: 0.95 }],
+  },
+  fabIcon: {
+    fontSize: 28,
   },
 });

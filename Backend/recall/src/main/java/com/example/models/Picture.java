@@ -7,9 +7,12 @@ public class Picture {
     private Event event;
     private String hashtags;
 
-
-
-    
+    public Picture(int id, String url, Event event, String hashtags) {
+        this.id = id;
+        this.url = url;
+        this.event = event;
+        this.hashtags = hashtags;
+    }
     public int getId() {
         return id;
     }

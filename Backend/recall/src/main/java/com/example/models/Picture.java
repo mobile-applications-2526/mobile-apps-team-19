@@ -1,7 +1,7 @@
 package com.example.models;
 import java.util.List;
 
-public class Pictures {
+public class Picture {
     private int id;
     private String url;
     private Event event;

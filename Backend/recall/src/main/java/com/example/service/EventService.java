@@ -1,7 +1,6 @@
 package com.example.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -25,6 +24,11 @@ public class EventService {
     public Event getEventById(Long id) {
         return eventRepository.findById(id).orElse(null);
          
+    }
+
+    public void createEvent(Event eventdata){
+        Event newEvent = new Event(eventdata.getName(), eventdata.getDate(), eventdata.getHostName(), eventdata.getStartTime(), eventdata.getEndTime(), null, null, eventdata.getLocation());
+        eventRepository.save(newEvent);
     }
 
 }

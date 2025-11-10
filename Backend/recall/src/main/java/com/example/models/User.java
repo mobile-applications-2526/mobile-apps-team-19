@@ -1,11 +1,15 @@
 package com.example.models;
 
+import java.util.List;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
@@ -17,12 +21,14 @@ public class User {
     private String email;
     private String password;
 
+    @ManyToMany(mappedBy = "users")
+    private List<Event> events;
 
-    public User() {
+    protected User() {
     }
 
     public User(Long id, String username, String email, String firstName, String lastName, String password) {
-         this.id = id;
+        this.id = id;
         setUsername(username);
         setEmail(email);
         setFirstName(firstName);
@@ -49,24 +55,37 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
     public String getFirstName() {
         return firstName;
     }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+
     public String getLastName() {
         return lastName;
     }
+
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
     public String getPassword() {
         return password;
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
 
-    
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+
 }

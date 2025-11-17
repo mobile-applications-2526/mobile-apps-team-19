@@ -27,8 +27,7 @@ public class User {
     protected User() {
     }
 
-    public User(Long id, String username, String email, String firstName, String lastName, String password) {
-        this.id = id;
+    public User(String username, String email, String firstName, String lastName, String password) {
         setUsername(username);
         setEmail(email);
         setFirstName(firstName);

@@ -9,6 +9,9 @@ import com.example.service.EventService;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @RestController
@@ -24,6 +27,14 @@ public class EventController {
     public List<Event> getAllEvents() {
         return eventService.getAllEvents();
     }
+
+    @PostMapping("")
+    public void createEvent(@RequestBody Event entityData) {
+
+        eventService.createEvent(entityData);
+        
+    }
+    
     
 
 

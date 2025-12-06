@@ -28,7 +28,7 @@ public class EventController {
         return eventService.getAllEvents();
     }
 
-    @PostMapping("")
+    @PostMapping()
     public void createEvent(@RequestBody Event entityData) {
 
         eventService.createEvent(entityData);

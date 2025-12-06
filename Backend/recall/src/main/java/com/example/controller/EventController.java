@@ -9,6 +9,7 @@ import com.example.service.EventService;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -28,15 +29,15 @@ public class EventController {
         return eventService.getAllEvents();
     }
 
+    @GetMapping("/{id}")
+    public Event getEventById(@PathVariable Long id) {
+        return eventService.getEventById(id);
+    }
+
     @PostMapping()
     public void createEvent(@RequestBody Event entityData) {
 
         eventService.createEvent(entityData);
         
     }
-    
-    
-
-
-    
 }

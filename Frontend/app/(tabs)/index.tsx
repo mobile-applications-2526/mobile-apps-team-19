@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, FlatList, Pressable, Text } from 'react-native';
+import { useRouter } from 'expo-router';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { EventCard, Event } from '@/components/event-card';
@@ -49,6 +50,7 @@ const MOCK_EVENTS: Event[] = [
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
+  const router = useRouter();
 
   const handleEventPress = (event: Event) => {
     // Navigate to event detail (to be implemented)
@@ -56,8 +58,7 @@ export default function HomeScreen() {
   };
 
   const handleCameraPress = () => {
-    // Open camera (to be implemented)
-    console.log('Camera pressed');
+    router.push('/camera-test');
   };
 
   const renderEmptyState = () => (

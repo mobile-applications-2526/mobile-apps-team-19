@@ -76,6 +76,35 @@ export default function HomeScreen() {
       {/* Header */}
       <View style={[styles.header, { backgroundColor: colors.background }]}>
         <ThemedText type="title">EventSnap</ThemedText>
+        <Pressable onPress={() => router.push('/profile')}>
+          <Text style={styles.profileIcon}>👤</Text>
+        </Pressable>
+      </View>
+
+      {/* Quick Actions */}
+      <View style={styles.quickActions}>
+        <Pressable
+          style={({ pressed }) => [
+            styles.actionButton,
+            styles.createButton,
+            pressed && { opacity: 0.8 },
+          ]}
+          onPress={() => router.push('/create-event')}>
+          <Text style={styles.actionIcon}>➕</Text>
+          <Text style={styles.actionText}>Maak Event</Text>
+        </Pressable>
+
+        <Pressable
+          style={({ pressed }) => [
+            styles.actionButton,
+            styles.joinButton,
+            { borderColor: colors.border },
+            pressed && { opacity: 0.7 },
+          ]}
+          onPress={() => router.push('/join-event')}>
+          <Text style={styles.actionIcon}>🎫</Text>
+          <Text style={[styles.actionText, { color: colors.text }]}>Join Event</Text>
+        </Pressable>
       </View>
 
       {/* Events List */}
@@ -159,5 +188,38 @@ const styles = StyleSheet.create({
   },
   fabIcon: {
     fontSize: 28,
+  },
+  profileIcon: {
+    fontSize: 28,
+  },
+  quickActions: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    gap: 12,
+  },
+  actionButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 14,
+    borderRadius: 12,
+    gap: 8,
+  },
+  createButton: {
+    backgroundColor: '#0066FF',
+  },
+  joinButton: {
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+  },
+  actionIcon: {
+    fontSize: 20,
+  },
+  actionText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFF',
   },
 });

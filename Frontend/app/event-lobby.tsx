@@ -37,7 +37,7 @@ export default function EventLobbyScreen() {
     const end = new Date(event.endTime);
     const diff = end.getTime() - now.getTime();
     
-    if (diff < 0) return 'Event beëindigd';
+    if (diff < 0) return 'Event ended';
     
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -87,7 +87,7 @@ export default function EventLobbyScreen() {
           <Text style={styles.countdownIcon}>⏱️</Text>
           <View>
             <Text style={[styles.countdownLabel, { color: colors.icon }]}>
-              Tijd over
+              Time Remaining
             </Text>
             <ThemedText style={styles.countdownValue}>
               {getTimeRemaining()}
@@ -100,19 +100,19 @@ export default function EventLobbyScreen() {
           <View style={[styles.statCard, { backgroundColor: colors.background, borderColor: colors.border }]}>
             <Text style={styles.statIcon}>📷</Text>
             <ThemedText style={styles.statValue}>{event.photoCount}</ThemedText>
-            <Text style={[styles.statLabel, { color: colors.icon }]}>Foto's</Text>
+            <Text style={[styles.statLabel, { color: colors.icon }]}>Photos</Text>
           </View>
           
           <View style={[styles.statCard, { backgroundColor: colors.background, borderColor: colors.border }]}>
             <Text style={styles.statIcon}>👥</Text>
             <ThemedText style={styles.statValue}>{event.participants.length}</ThemedText>
-            <Text style={[styles.statLabel, { color: colors.icon }]}>Deelnemers</Text>
+            <Text style={[styles.statLabel, { color: colors.icon }]}>Participants</Text>
           </View>
         </View>
 
         {/* Participants List */}
         <View style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>Deelnemers</ThemedText>
+          <ThemedText style={styles.sectionTitle}>Participants</ThemedText>
           {event.participants.map((participant) => (
             <View
               key={participant.id}
@@ -149,7 +149,7 @@ export default function EventLobbyScreen() {
           onPress={handleShareCode}>
           <Text style={styles.actionButtonIcon}>🔗</Text>
           <Text style={[styles.actionButtonText, { color: colors.text }]}>
-            Deel Code
+            Share Code
           </Text>
         </Pressable>
 
@@ -162,7 +162,7 @@ export default function EventLobbyScreen() {
           onPress={handleOpenCamera}>
           <Text style={styles.actionButtonIcon}>📷</Text>
           <Text style={[styles.actionButtonText, { color: '#FFFFFF' }]}>
-            Neem Foto
+            Take Photo
           </Text>
         </Pressable>
 
@@ -175,7 +175,7 @@ export default function EventLobbyScreen() {
             ]}
             onPress={handleViewPhotos}>
             <Text style={[styles.viewPhotosText, { color: colors.text }]}>
-              Bekijk Foto's ({event.photoCount})
+              View Photos ({event.photoCount})
             </Text>
           </Pressable>
         )}

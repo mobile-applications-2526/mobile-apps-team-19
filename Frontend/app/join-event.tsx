@@ -26,12 +26,12 @@ export default function JoinEventScreen() {
 
   const handleJoinEvent = async () => {
     if (!eventCode.trim()) {
-      Alert.alert('Fout', 'Voer een event code in');
+      Alert.alert('Error', 'Please enter an event code');
       return;
     }
 
     if (!displayName.trim()) {
-      Alert.alert('Fout', 'Voer je naam in');
+      Alert.alert('Error', 'Please enter your name');
       return;
     }
 
@@ -58,14 +58,14 @@ export default function JoinEventScreen() {
       }, 1000);
     } catch (error) {
       setIsLoading(false);
-      Alert.alert('Fout', 'Kon niet joinen. Probeer opnieuw.');
+      Alert.alert('Error', 'Could not join. Please try again.');
       console.error(error);
     }
   };
 
   const handleScanQR = () => {
     // TODO: implementeer QR scanner
-    Alert.alert('QR Scanner', 'QR scanner komt binnenkort...');
+    Alert.alert('QR Scanner', 'QR scanner coming soon...');
   };
 
   return (
@@ -84,9 +84,9 @@ export default function JoinEventScreen() {
 
         <View style={styles.content}>
           <Text style={styles.icon}>🎫</Text>
-          <ThemedText style={styles.title}>Join een Event</ThemedText>
+          <ThemedText style={styles.title}>Join an Event</ThemedText>
           <Text style={[styles.subtitle, { color: colors.icon }]}>
-            Voer de event code in die je hebt ontvangen
+            Enter the event code you received
           </Text>
 
           {/* Event Code Input */}
@@ -116,7 +116,7 @@ export default function JoinEventScreen() {
           {/* Display Name Input */}
           <View style={styles.inputContainer}>
             <Text style={[styles.label, { color: colors.icon }]}>
-              Jouw Naam
+              Your Name
             </Text>
             <TextInput
               style={[
@@ -145,14 +145,14 @@ export default function JoinEventScreen() {
             onPress={handleJoinEvent}
             disabled={isLoading}>
             <Text style={styles.joinButtonText}>
-              {isLoading ? 'Joinen...' : 'Join Event'}
+              {isLoading ? 'Joining...' : 'Join Event'}
             </Text>
           </Pressable>
 
           {/* Divider */}
           <View style={styles.divider}>
             <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
-            <Text style={[styles.dividerText, { color: colors.icon }]}>of</Text>
+            <Text style={[styles.dividerText, { color: colors.icon }]}>or</Text>
             <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
           </View>
 

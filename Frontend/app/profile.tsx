@@ -34,7 +34,7 @@ export default function ProfileScreen() {
   const handleSave = () => {
     // TODO: sla wijzigingen op naar backend
     setIsEditing(false);
-    Alert.alert('Succes', 'Profiel bijgewerkt!');
+      Alert.alert('Success', 'Profile updated!');
   };
 
   const StatCard = ({
@@ -64,7 +64,7 @@ export default function ProfileScreen() {
         <Pressable onPress={() => router.back()}>
           <Text style={styles.backIcon}>←</Text>
         </Pressable>
-        <ThemedText style={styles.headerTitle}>Profiel</ThemedText>
+        <ThemedText style={styles.headerTitle}>Profile</ThemedText>
         <Pressable onPress={() => router.push('/settings')}>
           <Text style={styles.settingsIcon}>⚙️</Text>
         </Pressable>
@@ -80,13 +80,13 @@ export default function ProfileScreen() {
               </Text>
             </View>
             <Pressable style={styles.changePhotoButton}>
-              <Text style={styles.changePhotoText}>Wijzig Foto</Text>
+              <Text style={styles.changePhotoText}>Change Photo</Text>
             </Pressable>
           </View>
 
           <View style={styles.infoSection}>
             <Text style={[styles.label, { color: colors.icon }]}>
-              Display Naam
+              Display Name
             </Text>
             {isEditing ? (
               <TextInput
@@ -100,7 +100,7 @@ export default function ProfileScreen() {
                 ]}
                 value={displayName}
                 onChangeText={setDisplayName}
-                placeholder="Voer naam in"
+                placeholder="Enter name"
                 placeholderTextColor={colors.icon}
               />
             ) : (
@@ -120,7 +120,7 @@ export default function ProfileScreen() {
                 ]}
                 value={email}
                 onChangeText={setEmail}
-                placeholder="Voer email in"
+                placeholder="Enter email"
                 placeholderTextColor={colors.icon}
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -147,7 +147,7 @@ export default function ProfileScreen() {
                   styles.editButtonText,
                   { color: isEditing ? '#FFF' : colors.text },
                 ]}>
-                {isEditing ? 'Opslaan' : 'Bewerk Profiel'}
+                {isEditing ? 'Save' : 'Edit Profile'}
               </Text>
             </Pressable>
           </View>
@@ -155,7 +155,7 @@ export default function ProfileScreen() {
 
         {/* Stats */}
         <View style={styles.statsSection}>
-          <ThemedText style={styles.sectionTitle}>Statistieken</ThemedText>
+          <ThemedText style={styles.sectionTitle}>Statistics</ThemedText>
           <View style={styles.statsGrid}>
             <StatCard
               icon="🎉"
@@ -177,7 +177,7 @@ export default function ProfileScreen() {
             <StatCard
               icon="👥"
               value={stats.friendsConnected}
-              label="Vrienden"
+              label="Friends"
             />
           </View>
         </View>
@@ -185,12 +185,12 @@ export default function ProfileScreen() {
         {/* Recent Activity */}
         <View style={styles.activitySection}>
           <ThemedText style={styles.sectionTitle}>
-            Recente Activiteit
+            Recent Activity
           </ThemedText>
           {[
-            { icon: '🎉', text: 'Lid geworden van Birthday Party', time: '2 uur geleden' },
-            { icon: '📷', text: '15 foto\'s genomen', time: '5 uur geleden' },
-            { icon: '💾', text: 'Album opgeslagen: Weekend Trip', time: '1 dag geleden' },
+            { icon: '🎉', text: 'Joined Birthday Party', time: '2 hours ago' },
+            { icon: '📷', text: 'Took 15 photos', time: '5 hours ago' },
+            { icon: '💾', text: 'Saved album: Weekend Trip', time: '1 day ago' },
           ].map((activity, index) => (
             <View
               key={index}

@@ -47,7 +47,7 @@ export default function AlbumsTabScreen() {
     <ThemedView style={styles.container}>
       {/* Header */}
       <View style={[styles.header, { backgroundColor: colors.background }]}>
-        <ThemedText style={styles.headerTitle}>Mijn Albums</ThemedText>
+        <ThemedText style={styles.headerTitle}>My Albums</ThemedText>
         <Pressable onPress={() => router.push('/profile')}>
           <Text style={styles.profileIcon}>👤</Text>
         </Pressable>
@@ -57,9 +57,9 @@ export default function AlbumsTabScreen() {
         {albums.length === 0 ? (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyIcon}>📷</Text>
-            <ThemedText style={styles.emptyTitle}>Geen albums</ThemedText>
+            <ThemedText style={styles.emptyTitle}>No albums</ThemedText>
             <Text style={[styles.emptySubtitle, { color: colors.icon }]}>
-              Opgeslagen foto's verschijnen hier
+              Saved photos will appear here
             </Text>
           </View>
         ) : (
@@ -87,7 +87,7 @@ export default function AlbumsTabScreen() {
                     {album.eventName}
                   </ThemedText>
                   <Text style={[styles.albumMeta, { color: colors.icon }]}>
-                    {album.photoCount} foto's • {new Date(album.date).toLocaleDateString('nl-NL')}
+                    {album.photoCount} photos • {new Date(album.date).toLocaleDateString('en-US')}
                   </Text>
                 </View>
               </Pressable>

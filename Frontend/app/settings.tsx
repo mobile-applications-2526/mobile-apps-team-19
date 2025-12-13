@@ -27,12 +27,12 @@ export default function SettingsScreen() {
 
   const handleClearCache = () => {
     Alert.alert(
-      'Cache Wissen',
-      'Weet je zeker dat je de cache wilt wissen? Dit verwijdert tijdelijke bestanden.',
+      'Clear Cache',
+      'Are you sure you want to clear the cache? This will remove temporary files.',
       [
-        { text: 'Annuleren', style: 'cancel' },
+        { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Wis Cache',
+          text: 'Clear Cache',
           style: 'destructive',
           onPress: () => {
             // TODO: implementeer cache wissen
@@ -45,12 +45,12 @@ export default function SettingsScreen() {
 
   const handleLogout = () => {
     Alert.alert(
-      'Uitloggen',
-      'Weet je zeker dat je wilt uitloggen?',
+      'Log Out',
+      'Are you sure you want to log out?',
       [
-        { text: 'Annuleren', style: 'cancel' },
+        { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Uitloggen',
+          text: 'Log Out',
           style: 'destructive',
           onPress: () => {
             // TODO: implementeer logout
@@ -117,7 +117,7 @@ export default function SettingsScreen() {
         <Pressable onPress={() => router.back()}>
           <Text style={styles.backIcon}>←</Text>
         </Pressable>
-        <ThemedText style={styles.headerTitle}>Instellingen</ThemedText>
+        <ThemedText style={styles.headerTitle}>Settings</ThemedText>
         <View style={{ width: 40 }} />
       </View>
 
@@ -125,19 +125,19 @@ export default function SettingsScreen() {
         {/* Notificaties Sectie */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.icon }]}>
-            MELDINGEN
+            NOTIFICATIONS
           </Text>
           <SettingItem
             icon="🔔"
-            title="Notificaties"
-            subtitle="Ontvang updates over events"
+            title="Notifications"
+            subtitle="Receive updates about events"
             value={notifications}
             onValueChange={setNotifications}
           />
           <SettingItem
             icon="📳"
-            title="Vibratie"
-            subtitle="Trillen bij notificaties"
+            title="Vibration"
+            subtitle="Vibrate on notifications"
             value={vibration}
             onValueChange={setVibration}
           />
@@ -150,15 +150,15 @@ export default function SettingsScreen() {
           </Text>
           <SettingItem
             icon="📸"
-            title="Hoge Kwaliteit"
-            subtitle="Betere foto's, meer opslag"
+            title="High Quality"
+            subtitle="Better photos, more storage"
             value={highQuality}
             onValueChange={setHighQuality}
           />
           <SettingItem
             icon="💾"
-            title="Auto Opslaan"
-            subtitle="Sla alle foto's automatisch op"
+            title="Auto Save"
+            subtitle="Save all photos automatically"
             value={autoSave}
             onValueChange={setAutoSave}
           />
@@ -167,19 +167,19 @@ export default function SettingsScreen() {
         {/* Opslag Sectie */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.icon }]}>
-            OPSLAG
+            STORAGE
           </Text>
           <SettingItem
             icon="🗑️"
-            title="Cache Wissen"
-            subtitle="Verwijder tijdelijke bestanden"
+            title="Clear Cache"
+            subtitle="Remove temporary files"
             showArrow
             onPress={handleClearCache}
           />
           <SettingItem
             icon="📊"
-            title="Opslag Gebruik"
-            subtitle="Bekijk hoeveel ruimte je gebruikt"
+            title="Storage Usage"
+            subtitle="View how much space you're using"
             showArrow
             onPress={() => console.log('Opslag bekijken')}
           />
@@ -188,25 +188,25 @@ export default function SettingsScreen() {
         {/* Info Sectie */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.icon }]}>
-            INFORMATIE
+            INFORMATION
           </Text>
           <SettingItem
             icon="ℹ️"
-            title="Over Recall"
-            subtitle="Versie 1.0.0"
+            title="About Recall"
+            subtitle="Version 1.0.0"
             showArrow
             onPress={() => console.log('Over pagina')}
           />
           <SettingItem
             icon="📄"
-            title="Privacy Beleid"
+            title="Privacy Policy"
             showArrow
             onPress={() => console.log('Privacy beleid')}
           />
           <SettingItem
             icon="📧"
             title="Contact"
-            subtitle="Help en feedback"
+            subtitle="Help and feedback"
             showArrow
             onPress={() => console.log('Contact')}
           />
@@ -224,7 +224,7 @@ export default function SettingsScreen() {
             ]}
             onPress={handleLogout}>
             <Text style={styles.logoutIcon}>🚪</Text>
-            <Text style={styles.logoutText}>Uitloggen</Text>
+            <Text style={styles.logoutText}>Log Out</Text>
           </Pressable>
         </View>
 

@@ -58,12 +58,12 @@ export default function AlbumsScreen() {
   const handleExportAlbum = async (album: typeof albums[0]) => {
     // Later implementeren - foto's exportern naar gallery
     Alert.alert(
-      'Album Exporteren',
-      `${album.photoCount} foto's van "${album.eventName}" worden geëxporteerd naar je galerij.`,
+      'Export Album',
+      `${album.photoCount} photos from "${album.eventName}" will be exported to your gallery.`,
       [
-        { text: 'Annuleren', style: 'cancel' },
+        { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Exporteer',
+          text: 'Export',
           onPress: () => {
             // TODO: implementeer export functionaliteit
             console.log('Exporteer album:', album.id);
@@ -85,12 +85,12 @@ export default function AlbumsScreen() {
 
   const handleDeleteAlbum = (album: typeof albums[0]) => {
     Alert.alert(
-      'Album Verwijderen',
-      `Weet je zeker dat je "${album.eventName}" wilt verwijderen? Dit kan niet ongedaan gemaakt worden.`,
+      'Delete Album',
+      `Are you sure you want to delete "${album.eventName}"? This cannot be undone.`,
       [
-        { text: 'Annuleren', style: 'cancel' },
+        { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Verwijder',
+          text: 'Delete',
           style: 'destructive',
           onPress: () => {
             // TODO: implementeer verwijder functionaliteit
@@ -108,7 +108,7 @@ export default function AlbumsScreen() {
         <Pressable onPress={() => router.back()}>
           <Text style={styles.backIcon}>←</Text>
         </Pressable>
-        <ThemedText style={styles.headerTitle}>Mijn Albums</ThemedText>
+        <ThemedText style={styles.headerTitle}>My Albums</ThemedText>
         <View style={{ width: 40 }} />
       </View>
 
@@ -116,9 +116,9 @@ export default function AlbumsScreen() {
         {albums.length === 0 ? (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyIcon}>📷</Text>
-            <ThemedText style={styles.emptyTitle}>Geen albums</ThemedText>
+            <ThemedText style={styles.emptyTitle}>No albums</ThemedText>
             <Text style={[styles.emptySubtitle, { color: colors.icon }]}>
-              Opgeslagen foto's verschijnen hier
+              Saved photos will appear here
             </Text>
           </View>
         ) : (
@@ -139,7 +139,7 @@ export default function AlbumsScreen() {
                     {album.eventName}
                   </ThemedText>
                   <Text style={[styles.albumMeta, { color: colors.icon }]}>
-                    {album.photoCount} foto's • {new Date(album.date).toLocaleDateString('nl-NL')}
+                    {album.photoCount} photos • {new Date(album.date).toLocaleDateString('en-US')}
                   </Text>
                 </View>
 

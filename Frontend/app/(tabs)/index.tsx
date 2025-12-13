@@ -91,7 +91,7 @@ export default function HomeScreen() {
           ]}
           onPress={() => router.push('/create-event')}>
           <Text style={styles.actionIcon}>➕</Text>
-          <Text style={styles.actionText}>Maak Event</Text>
+          <Text style={styles.actionText}>Create Event</Text>
         </Pressable>
 
         <Pressable

@@ -60,8 +60,8 @@ export default function AlbumDetailScreen() {
           <ThemedText style={styles.headerTitle} numberOfLines={1}>
             {album.eventName}
           </ThemedText>
-          <Text style={[styles.headerSubtitle, { color: colors.icon }]}>
-            {album.photoCount} foto's
+                  <Text style={[styles.headerSubtitle, { color: colors.icon }]}>
+            {album.photoCount} photos
           </Text>
         </View>
         <View style={{ width: 40 }} />

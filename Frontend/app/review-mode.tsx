@@ -129,10 +129,10 @@ export default function ReviewModeScreen() {
         <View style={styles.completedContainer}>
           <Text style={styles.completedIcon}>✅</Text>
           <Text style={[styles.completedTitle, { color: colors.text }]}>
-            Alle foto's bekeken!
+            All photos reviewed!
           </Text>
           <Text style={[styles.completedSubtitle, { color: colors.icon }]}>
-            {savedPhotos.length} foto's opgeslagen
+            {savedPhotos.length} photos saved
           </Text>
           
           <Pressable
@@ -141,7 +141,7 @@ export default function ReviewModeScreen() {
               pressed && { opacity: 0.8 },
             ]}
             onPress={() => router.push('/albums')}>
-            <Text style={styles.doneButtonText}>Ga naar Albums</Text>
+            <Text style={styles.doneButtonText}>Go to Albums</Text>
           </Pressable>
           
           <Pressable
@@ -152,7 +152,7 @@ export default function ReviewModeScreen() {
             ]}
             onPress={() => router.back()}>
             <Text style={[styles.backButtonText, { color: colors.text }]}>
-              Terug naar Event
+              Back to Event
             </Text>
           </Pressable>
         </View>
@@ -202,7 +202,7 @@ export default function ReviewModeScreen() {
               styles.likeOverlay,
               { opacity: likeOpacity },
             ]}>
-            <Text style={styles.overlayText}>BEWAAR</Text>
+            <Text style={styles.overlayText}>SAVE</Text>
           </Animated.View>
 
           {/* Nope overlay */}

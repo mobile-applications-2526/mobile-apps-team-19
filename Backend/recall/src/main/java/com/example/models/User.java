@@ -2,7 +2,6 @@ package com.example.models;
 
 import java.util.List;
 
-import org.checkerframework.common.value.qual.MinLen;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

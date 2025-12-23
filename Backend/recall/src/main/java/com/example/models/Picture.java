@@ -32,8 +32,7 @@ public class Picture {
     protected Picture() {
     }
 
-    public Picture(long id, String url, Event event, String hashtags) {
-        this.id = id;
+    public Picture(String url, Event event, String hashtags) {
         this.url = url;
         this.event = event;
         this.hashtags = hashtags;

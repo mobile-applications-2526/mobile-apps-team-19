@@ -7,11 +7,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.JoinColumn;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -30,11 +31,13 @@ public class Event {
     private LocalTime startTime;
     private LocalTime endTime;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "event_users", joinColumns = @JoinColumn(name = "event_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> users;
+    @ElementCollection
+    @CollectionTable(name = "event_usernames", joinColumns = @JoinColumn(name = "event_id"))
+    @Column(name = "username")
+    private List<String> usernames;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "event_id", nullable = false)
     private List<Picture> pictures;
 
     private String location;
@@ -42,16 +45,17 @@ public class Event {
     protected Event() {
     }
 
-    public Event(String name, LocalDate date, String hostName, LocalTime startTime, LocalTime endTime, List<User> users,
-            List<Picture> pictures, String location) {
+    public Event(String name, LocalDate date, String hostName, LocalTime startTime, LocalTime endTime,
+            String location) {
         setDate(date);
         setEndTime(endTime);
         setStarTime(startTime);
         setName(name);
         setHostName(hostName);
-        setUsers(users);
-        setPictures(pictures);
+        this.pictures = List.of();
+        this.usernames = List.of();
         setLocation(location);
+
     }
 
     public void setName(String name) {
@@ -74,8 +78,8 @@ public class Event {
         this.endTime = endTime;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setUsernames(List<String> usernames) {
+        this.usernames = usernames;
     }
 
     public void setPictures(List<Picture> pictures) {
@@ -106,8 +110,8 @@ public class Event {
         return endTime;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public List<String> getUsernames() {
+        return usernames;
     }
 
     public List<Picture> getPictures() {

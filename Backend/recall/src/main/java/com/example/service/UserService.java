@@ -48,7 +48,6 @@ public class UserService {
             final var token = jwtService.generateToken(user);
             log.info("Login successful for username: {}", username);
             return new AuthenticationResponse(
-                    "Authentication successful.",
                     token,
                     user.getUsername());
         } catch (BadCredentialsException e) {

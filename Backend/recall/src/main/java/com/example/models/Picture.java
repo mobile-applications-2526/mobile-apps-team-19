@@ -7,8 +7,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
 
 @Entity
 @Table(name = "pictures")
@@ -20,19 +18,13 @@ public class Picture {
 
     private String url;
 
-    @ManyToOne
-    @JoinColumn(name = "event_id", nullable = false)
-    private Event event;
-
     private String hashtags;
 
     protected Picture() {
     }
 
-    public Picture(long id, String url, Event event, String hashtags) {
-        this.id = id;
+    public Picture(String url, String hashtags) {
         this.url = url;
-        this.event = event;
         this.hashtags = hashtags;
     }
 
@@ -51,14 +43,6 @@ public class Picture {
     public void setUrl(String url) {
         this.url = url;
 
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
     }
 
     public String getHashtags() {

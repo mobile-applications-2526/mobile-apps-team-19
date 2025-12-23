@@ -1,6 +1,7 @@
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import UserService from '@/service/userService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
@@ -17,8 +18,21 @@ export default function LoginScreen() {
 
     try {
       const result = await UserService.loginUser({ username, password });
+      console.log('Login result:', JSON.stringify(result, null, 2));
+
+      const userDataToSave = {
+        token: result.token,
+        username: result.username
+      };
+
+      await AsyncStorage.setItem('loggedInUser', JSON.stringify(userDataToSave));
+      console.log('User saved to AsyncStorage:', JSON.stringify(userDataToSave, null, 2));
+
       Alert.alert('Success', 'Login successful!');
-      router.push('/(tabs)');
+
+      setTimeout(() => {
+        router.push('/(tabs)');
+      }, 100);
     } catch (error) {
       Alert.alert('Error', 'Login failed. Please check your credentials and network connection.');
       console.error('Login error:', error);

@@ -16,7 +16,9 @@ const loginUser = async (user: User) => {
             throw new Error(`HTTP error! status: ${response.status}, message: ${errorData}`);
         }
 
-        return await response.json();
+        const result = await response.json();
+        console.log("Backend response:", JSON.stringify(result, null, 2));
+        return result;
     } catch (error) {
         console.error("Login error:", error);
         throw error;

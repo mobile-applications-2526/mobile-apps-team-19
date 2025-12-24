@@ -1,0 +1,22 @@
+
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#A78BFA"/>
+    </linearGradient>
+  </defs>
+  <rect x="64" y="64" width="384" height="384" rx="96" fill="url(#g)"/>
+  
+  <!-- Calendar top rings -->
+  <rect x="160" y="112" width="32" height="64" rx="16" fill="#FFFFFF"/>
+  <rect x="320" y="112" width="32" height="64" rx="16" fill="#FFFFFF"/>
+  
+  <!-- Camera body -->
+  <rect x="152" y="200" width="208" height="160" rx="40" fill="#FFFFFF"/>
+  <rect x="208" y="168" width="96" height="48" rx="24" fill="#FFFFFF"/>
+  
+  <!-- Camera lens -->
+  <circle cx="256" cy="280" r="44" fill="#7C3AED"/>
+  <circle cx="256" cy="280" r="28" fill="#FFFFFF"/>
+</svg>

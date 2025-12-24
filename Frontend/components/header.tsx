@@ -1,11 +1,12 @@
 import React, { useCallback, useState } from "react";
-import { View, StyleSheet, Text, Pressable } from "react-native";
+import { View, StyleSheet, Text, Pressable, Image } from "react-native";
 import { ThemedText } from "./themed-text";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useRouter } from "expo-router";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 interface HeaderProps {
   title?: string;
@@ -38,21 +39,25 @@ export function Header({ title = "Recall" }: HeaderProps) {
   };
 
   return (
-    <View style={[styles.header, { backgroundColor: colors.background }]}>
-      <ThemedText type="title" style={{ color: colors.text }}>
-        {title}
-      </ThemedText>
+    <View style={[styles.header]}>
+      <View style={styles.titleContainer}>
+        <Image
+          source={require("../assets/logo/Logo.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+        <ThemedText type="title" style={styles.titleText}>
+          {title}
+        </ThemedText>
+      </View>
 
       {isLoggedIn ? (
         <Pressable onPress={handleLogout} style={styles.logoutButton}>
           <Text style={styles.logoutText}>Logout</Text>
         </Pressable>
       ) : (
-        <Pressable
-          onPress={handleLogin}
-          style={[styles.loginButton, { borderColor: colors.tint }]}
-        >
-          <Text style={[styles.loginText, { color: colors.tint }]}>Login</Text>
+        <Pressable onPress={handleLogin} style={styles.loginButton}>
+          <Text style={styles.loginText}>Login</Text>
         </Pressable>
       )}
     </View>
@@ -65,29 +70,45 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingTop: 60,
+    paddingTop: 20,
     paddingBottom: 16,
+    backgroundColor: "#7C3AED", // Nice purple background
     borderBottomWidth: 1,
-    borderBottomColor: "#E5E7EB",
+    borderBottomColor: "#6D28D9",
+  },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  logo: {
+    width: 60,
+    height: 60,
+    marginRight: 12,
+  },
+  titleText: {
+    color: "#FFFFFF",
+    fontSize: 50,
+    fontWeight: "700",
   },
   loginButton: {
-    borderWidth: 1.5,
+    backgroundColor: "#A78BFA", // Less purple button
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 8,
   },
   loginText: {
+    color: "#FFFFFF",
     fontSize: 14,
     fontWeight: "600",
   },
   logoutButton: {
-    backgroundColor: "#FF3B30",
+    backgroundColor: "#A78BFA",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 8,
   },
   logoutText: {
-    color: "white",
+    color: "#FFFFFF",
     fontSize: 14,
     fontWeight: "600",
   },

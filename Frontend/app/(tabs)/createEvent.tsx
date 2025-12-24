@@ -5,13 +5,17 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet } from "react-native";
 
-export default function HomeScreen() {
+export default function CreateEvent() {
   const router = useRouter();
 
+  const handleEventCreated = () => {
+    router.push("/(tabs)/event");
+  };
 
   return (
     <ThemedView style={styles.container}>
       <Header />
+      <CreateEventForm onSuccess={handleEventCreated} />
     </ThemedView>
   );
 }

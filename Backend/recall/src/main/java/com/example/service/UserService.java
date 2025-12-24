@@ -44,10 +44,11 @@ public class UserService {
         try {
             final var usernamePasswordAuthentication = new UsernamePasswordAuthenticationToken(username, password);
             final var authentication = authenticationManager.authenticate(usernamePasswordAuthentication);
-            final var user = (User) authentication.getPrincipal();
+            final var user = ((UserDetailsImpl) authentication.getPrincipal()).user();
             final var token = jwtService.generateToken(user);
             log.info("Login successful for username: {}", username);
             return new AuthenticationResponse(
+                    "Login successful",
                     token,
                     user.getUsername());
         } catch (BadCredentialsException e) {

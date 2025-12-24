@@ -7,6 +7,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
@@ -25,10 +28,16 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Event name cannot be blank")
     private String name;
+    @FutureOrPresent(message = "Event date cannot be in the past")
+    @NotNull(message = "Event date cannot be null")
     private LocalDate date;
+    @NotBlank(message = "Host name cannot be blank")
     private String hostName;
+    @NotNull(message = "Event start time cannot be null")
     private LocalTime startTime;
+    @NotNull(message = "Event end time cannot be null")
     private LocalTime endTime;
 
     @ElementCollection
@@ -49,7 +58,7 @@ public class Event {
             String location) {
         setDate(date);
         setEndTime(endTime);
-        setStarTime(startTime);
+        setStartTime(startTime);
         setName(name);
         setHostName(hostName);
         this.pictures = List.of();
@@ -70,7 +79,7 @@ public class Event {
         this.hostName = hostName;
     }
 
-    public void setStarTime(LocalTime startTime) {
+    public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
     }
 

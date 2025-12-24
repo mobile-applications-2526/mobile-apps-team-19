@@ -36,10 +36,6 @@ public class UserController {
 
     @PostMapping("/login")
     public AuthenticationResponse login(@RequestBody AuthenticationRequest authenticationRequest) {
-        log.info("Login request received - username: {}, email: {}, password: {}",
-                authenticationRequest.username(),
-                authenticationRequest.email(),
-                authenticationRequest.password() != null ? "***" : "null");
         return userService.signIn(authenticationRequest.getUsernameOrEmail(), authenticationRequest.password());
     }
 

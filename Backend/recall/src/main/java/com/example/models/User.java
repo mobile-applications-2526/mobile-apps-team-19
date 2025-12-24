@@ -1,5 +1,6 @@
 package com.example.models;
 
+import java.util.Collection;
 import java.util.List;
 
 
@@ -9,6 +10,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -16,7 +20,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,9 +37,6 @@ public class User {
     @NotBlank(message = "Password cannot be blank")
     @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
-
-    @ManyToMany(mappedBy = "users")
-    private List<Event> events;
 
     protected User() {
     }
@@ -68,7 +69,6 @@ public class User {
         this.email = email;
     }
 
-
     public String getFirstName() {
         return firstName;
     }
@@ -93,12 +93,29 @@ public class User {
         this.password = password;
     }
 
-    public List<Event> getEvents() {
-        return events;
+    // UserDetails interface methods
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
     }
 
-    public void setEvents(List<Event> events) {
-        this.events = events;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

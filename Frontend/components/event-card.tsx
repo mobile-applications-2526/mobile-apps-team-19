@@ -1,15 +1,17 @@
-import React from 'react';
-import { StyleSheet, View, Text, Pressable, Image } from 'react-native';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Colors } from '@/constants/theme';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+import React from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 export type Event = {
     id: string;
     title: string;
-    dateRange: string;
+    date?: string;
+    dateRange?: string;
     location?: string;
-    photoCount: number;
-    thumbnails: string[]; 
+    photoCount?: number;
+    description?: string;
+    usernames?: string[];
 };
 
 type EventCardProps = {
@@ -21,31 +23,24 @@ export function EventCard({ event, onPress }: EventCardProps) {
     const colorScheme = useColorScheme();
     const colors = Colors[colorScheme ?? 'light'];
 
+    const displayDate = event.dateRange || event.date || 'Date not set';
+    const photoInfo = event.photoCount !== undefined
+        ? `${event.photoCount} ${event.photoCount === 1 ? 'photo' : 'photos'}`
+        : null;
+
     return (
         <Pressable
             style={({ pressed }) => [
                 styles.card,
-                { backgroundColor: colors.background },
+                {
+                    backgroundColor: colors.background,
+                    borderColor: colors.icon + '20',
+                },
                 pressed && styles.cardPressed,
             ]}
             onPress={onPress}>
-            <View style={styles.thumbnailContainer}>
-                {event.thumbnails.slice(0, 4).map((thumb, index) => (
-                    <View
-                        key={index}
-                        style={[
-                            styles.thumbnail,
-                            { backgroundColor: colors.icon + '20' },
-                        ]}>
-                        {thumb ? (
-                            <Image source={{ uri: thumb }} style={styles.thumbnailImage} />
-                        ) : (
-                            <Text style={[styles.placeholderText, { color: colors.icon }]}>
-                                📷
-                            </Text>
-                        )}
-                    </View>
-                ))}
+            <View style={styles.iconPill}>
+                <Text style={styles.iconText}>📅</Text>
             </View>
 
             <View style={styles.details}>
@@ -53,7 +48,7 @@ export function EventCard({ event, onPress }: EventCardProps) {
                     {event.title}
                 </Text>
                 <Text style={[styles.meta, { color: colors.icon }]}>
-                    {event.photoCount} {event.photoCount === 1 ? 'photo' : 'photos'} · {event.dateRange}
+                    {photoInfo ? `${photoInfo} · ${displayDate}` : displayDate}
                 </Text>
                 {event.location && (
                     <Text style={[styles.location, { color: colors.icon }]} numberOfLines={1}>
@@ -72,37 +67,29 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
         marginVertical: 8,
         borderRadius: 12,
+        borderWidth: 1,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 3,
+        alignItems: 'center',
     },
     cardPressed: {
         opacity: 0.7,
+        transform: [{ scale: 0.98 }],
     },
-    thumbnailContainer: {
-        width: 100,
-        height: 100,
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 2,
-        marginRight: 16,
-    },
-    thumbnail: {
-        width: 48,
-        height: 48,
-        borderRadius: 6,
+    iconPill: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        backgroundColor: '#007AFF20',
         justifyContent: 'center',
         alignItems: 'center',
-        overflow: 'hidden',
+        marginRight: 16,
     },
-    thumbnailImage: {
-        width: '100%',
-        height: '100%',
-    },
-    placeholderText: {
-        fontSize: 20,
+    iconText: {
+        fontSize: 28,
     },
     details: {
         flex: 1,

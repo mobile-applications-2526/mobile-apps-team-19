@@ -41,14 +41,19 @@ export function Header({ title = "Recall" }: HeaderProps) {
   return (
     <View style={styles.header}>
       <View style={styles.titleContainer}>
-        <Image
-          source={require("../assets/logo/Logo.png")}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-        <ThemedText type="title" style={styles.titleText}>
-          {title}
-        </ThemedText>
+        <Pressable
+          onPress={() => router.push("/(tabs)")}
+          style={styles.pressableContent}
+        >
+          <Image
+            source={require("../assets/logo/Logo.png")}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+          <ThemedText type="title" style={styles.titleText}>
+            {title}
+          </ThemedText>
+        </Pressable>
       </View>
 
       <View style={styles.actions}>
@@ -94,6 +99,9 @@ const styles = StyleSheet.create({
     borderBottomColor: "#6D28D9",
   },
   titleContainer: {
+    // Pressable handles the layout now
+  },
+  pressableContent: {
     flexDirection: "row",
     alignItems: "center",
   },

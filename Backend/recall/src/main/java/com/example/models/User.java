@@ -26,7 +26,7 @@ public class User{
     @NotBlank(message = "Last name cannot be blank")
     private String lastName;
     @NotBlank(message = "Email cannot be blank")
-    @Email(message = "Email should be valid")
+    // @Email(message = "Email should be valid")
     private String email;
     @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;

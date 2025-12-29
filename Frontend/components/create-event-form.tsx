@@ -12,6 +12,8 @@ import {
   TextInput,
   View,
   useWindowDimensions,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 
 type CreateEventFormProps = {
@@ -132,226 +134,276 @@ export function CreateEventForm({ onSuccess, onCancel }: CreateEventFormProps) {
   };
 
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: colors.background }]}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.keyboardView}
     >
-      <View style={styles.form}>
-        <Text style={[styles.title, { color: colors.text }]}>
-          Create New Event
-        </Text>
-
-        <View style={styles.inputGroup}>
-          <Text style={[styles.label, { color: colors.text }]}>
-            Event Name *
-          </Text>
-          <TextInput
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.formWrapper}>
+          <Text
             style={[
-              styles.input,
-              {
-                backgroundColor: colors.background,
-                color: colors.text,
-                borderColor: colors.icon + "40",
-              },
+              styles.title,
+              { color: colors.text, fontSize: isSmallScreen ? 24 : 28 },
             ]}
-            value={name}
-            onChangeText={setName}
-            placeholder="e.g., Sarah's Birthday Party"
-            placeholderTextColor={colors.icon}
-            editable={!isSubmitting}
-          />
-        </View>
-
-        <View style={styles.inputGroup}>
-          <Text style={[styles.label, { color: colors.text }]}>Date *</Text>
-          <TextInput
-            style={[
-              styles.input,
-              {
-                backgroundColor: colors.background,
-                color: colors.text,
-                borderColor: colors.icon + "40",
-              },
-            ]}
-            value={date}
-            onChangeText={setDate}
-            placeholder="YYYY-MM-DD (e.g., 2024-12-25)"
-            placeholderTextColor={colors.icon}
-            editable={!isSubmitting}
-          />
-        </View>
-
-        <View style={styles.inputGroup}>
-          <Text style={[styles.label, { color: colors.text }]}>
-            Host Name *
-          </Text>
-          <TextInput
-            style={[
-              styles.input,
-              {
-                backgroundColor: colors.background,
-                color: colors.text,
-                borderColor: colors.icon + "40",
-              },
-            ]}
-            value={hostName}
-            onChangeText={setHostName}
-            placeholder="e.g., John Doe"
-            placeholderTextColor={colors.icon}
-            editable={!isSubmitting}
-          />
-        </View>
-
-        <View style={styles.inputGroup}>
-          <Text style={[styles.label, { color: colors.text }]}>
-            Start Time *
-          </Text>
-          <TextInput
-            style={[
-              styles.input,
-              {
-                backgroundColor: colors.background,
-                color: colors.text,
-                borderColor: colors.icon + "40",
-              },
-            ]}
-            value={startTime}
-            onChangeText={setStartTime}
-            placeholder="HH:MM (e.g., 18:00)"
-            placeholderTextColor={colors.icon}
-            editable={!isSubmitting}
-          />
-        </View>
-
-        <View style={styles.inputGroup}>
-          <Text style={[styles.label, { color: colors.text }]}>End Time *</Text>
-          <TextInput
-            style={[
-              styles.input,
-              {
-                backgroundColor: colors.background,
-                color: colors.text,
-                borderColor: colors.icon + "40",
-              },
-            ]}
-            value={endTime}
-            onChangeText={setEndTime}
-            placeholder="HH:MM (e.g., 23:30)"
-            placeholderTextColor={colors.icon}
-            editable={!isSubmitting}
-          />
-        </View>
-
-        <View style={styles.inputGroup}>
-          <Text style={[styles.label, { color: colors.text }]}>Location</Text>
-          <TextInput
-            style={[
-              styles.input,
-              {
-                backgroundColor: colors.background,
-                color: colors.text,
-                borderColor: colors.icon + "40",
-              },
-            ]}
-            value={location}
-            onChangeText={setLocation}
-            placeholder="e.g., 123 Party Avenue"
-            placeholderTextColor={colors.icon}
-            editable={!isSubmitting}
-          />
-        </View>
-
-        <View style={styles.buttonContainer}>
-          <Pressable
-            style={[
-              styles.button,
-              styles.submitButton,
-              { backgroundColor: "#007AFF" },
-            ]}
-            onPress={handleSubmit}
-            disabled={isSubmitting}
           >
-            {isSubmitting ? (
-              <ActivityIndicator color="white" />
-            ) : (
-              <Text style={styles.buttonText}>Create Event</Text>
-            )}
-          </Pressable>
+            Create New Event
+          </Text>
 
-          {onCancel && (
-            <Pressable
-              style={[
-                styles.button,
-                styles.cancelButton,
-                { borderColor: colors.icon },
-              ]}
-              onPress={onCancel}
-              disabled={isSubmitting}
-            >
-              <Text style={[styles.cancelButtonText, { color: colors.text }]}>
-                Cancel
+          <View style={styles.form}>
+            <View style={styles.inputGroup}>
+              <Text
+                style={[
+                  styles.label,
+                  { color: colors.text, fontSize: isSmallScreen ? 14 : 16 },
+                ]}
+              >
+                Event Name *
               </Text>
-            </Pressable>
-          )}
+              <TextInput
+                style={[
+                  styles.input,
+                  {
+                    backgroundColor: colors.background,
+                    color: colors.text,
+                    borderColor: colors.icon + "40",
+                    fontSize: isSmallScreen ? 14 : 16,
+                    padding: isSmallScreen ? 12 : 16,
+                  },
+                ]}
+                value={name}
+                onChangeText={setName}
+                placeholder="e.g., Sarah's Birthday Party"
+                placeholderTextColor={colors.icon}
+                editable={!isSubmitting}
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text
+                style={[
+                  styles.label,
+                  { color: colors.text, fontSize: isSmallScreen ? 14 : 16 },
+                ]}
+              >
+                Date *
+              </Text>
+              <TextInput
+                style={[
+                  styles.input,
+                  {
+                    backgroundColor: colors.background,
+                    color: colors.text,
+                    borderColor: colors.icon + "40",
+                    fontSize: isSmallScreen ? 14 : 16,
+                    padding: isSmallScreen ? 12 : 16,
+                  },
+                ]}
+                value={date}
+                onChangeText={setDate}
+                placeholder="YYYY-MM-DD (e.g., 2024-12-25)"
+                placeholderTextColor={colors.icon}
+                editable={!isSubmitting}
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text
+                style={[
+                  styles.label,
+                  { color: colors.text, fontSize: isSmallScreen ? 14 : 16 },
+                ]}
+              >
+                Host Name *
+              </Text>
+              <TextInput
+                style={[
+                  styles.input,
+                  {
+                    backgroundColor: colors.background,
+                    color: colors.text,
+                    borderColor: colors.icon + "40",
+                    fontSize: isSmallScreen ? 14 : 16,
+                    padding: isSmallScreen ? 12 : 16,
+                  },
+                ]}
+                value={hostName}
+                onChangeText={setHostName}
+                placeholder="e.g., John Doe"
+                placeholderTextColor={colors.icon}
+                editable={!isSubmitting}
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text
+                style={[
+                  styles.label,
+                  { color: colors.text, fontSize: isSmallScreen ? 14 : 16 },
+                ]}
+              >
+                Start Time *
+              </Text>
+              <TextInput
+                style={[
+                  styles.input,
+                  {
+                    backgroundColor: colors.background,
+                    color: colors.text,
+                    borderColor: colors.icon + "40",
+                    fontSize: isSmallScreen ? 14 : 16,
+                    padding: isSmallScreen ? 12 : 16,
+                  },
+                ]}
+                value={startTime}
+                onChangeText={setStartTime}
+                placeholder="HH:MM (e.g., 18:00)"
+                placeholderTextColor={colors.icon}
+                editable={!isSubmitting}
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text
+                style={[
+                  styles.label,
+                  { color: colors.text, fontSize: isSmallScreen ? 14 : 16 },
+                ]}
+              >
+                End Time *
+              </Text>
+              <TextInput
+                style={[
+                  styles.input,
+                  {
+                    backgroundColor: colors.background,
+                    color: colors.text,
+                    borderColor: colors.icon + "40",
+                    fontSize: isSmallScreen ? 14 : 16,
+                    padding: isSmallScreen ? 12 : 16,
+                  },
+                ]}
+                value={endTime}
+                onChangeText={setEndTime}
+                placeholder="HH:MM (e.g., 23:30)"
+                placeholderTextColor={colors.icon}
+                editable={!isSubmitting}
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text
+                style={[
+                  styles.label,
+                  { color: colors.text, fontSize: isSmallScreen ? 14 : 16 },
+                ]}
+              >
+                Location
+              </Text>
+              <TextInput
+                style={[
+                  styles.input,
+                  {
+                    backgroundColor: colors.background,
+                    color: colors.text,
+                    borderColor: colors.icon + "40",
+                    fontSize: isSmallScreen ? 14 : 16,
+                    padding: isSmallScreen ? 12 : 16,
+                  },
+                ]}
+                value={location}
+                onChangeText={setLocation}
+                placeholder="e.g., 123 Party Avenue"
+                placeholderTextColor={colors.icon}
+                editable={!isSubmitting}
+              />
+            </View>
+
+            <View style={styles.buttonContainer}>
+              <Pressable
+                style={[
+                  styles.button,
+                  {
+                    backgroundColor: "#7C3AED",
+                    padding: isSmallScreen ? 12 : 16,
+                  },
+                ]}
+                onPress={handleSubmit}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <ActivityIndicator color="white" />
+                ) : (
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      { fontSize: isSmallScreen ? 16 : 18 },
+                    ]}
+                  >
+                    Create Event
+                  </Text>
+                )}
+              </Pressable>
+            </View>
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  keyboardView: {
     flex: 1,
   },
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: "5%",
+    paddingVertical: 15,
+    paddingBottom: 100,
+  },
+  formWrapper: {
+    width: "100%",
+    maxWidth: 500,
+    alignSelf: "center",
+  },
   form: {
-    padding: 20,
+    width: "100%",
   },
   title: {
-    fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 24,
+    marginBottom: 25,
     textAlign: "center",
   },
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: 15,
   },
   label: {
-    fontSize: 16,
     fontWeight: "600",
-    marginBottom: 8,
+    marginBottom: 6,
   },
   input: {
     borderWidth: 1,
-    borderRadius: 8,
-    padding: 12,
+    borderRadius: 12,
     fontSize: 16,
   },
   buttonContainer: {
-    marginTop: 24,
+    marginTop: 20,
     gap: 12,
   },
   button: {
-    padding: 16,
-    borderRadius: 8,
+    borderRadius: 12,
     alignItems: "center",
-  },
-  submitButton: {
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  cancelButton: {
-    borderWidth: 1,
-    backgroundColor: "transparent",
+    shadowColor: "#7C3AED",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
   },
   buttonText: {
     color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  cancelButtonText: {
-    fontSize: 16,
     fontWeight: "600",
   },
 });

@@ -11,6 +11,7 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.CollectionTable;
@@ -45,9 +46,11 @@ public class Event {
     @Column(name = "username")
     private List<String> usernames;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "event_id", nullable = false)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "event")
     private List<Picture> pictures;
+
+    @ManyToMany(mappedBy = "events")
+    private List<User> users;
 
     private String location;
 
@@ -129,6 +132,14 @@ public class Event {
 
     public String getLocation() {
         return location;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
 }

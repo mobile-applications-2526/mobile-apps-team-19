@@ -12,6 +12,7 @@ import com.example.controller.dto.AuthenticationRequest;
 import com.example.controller.dto.AuthenticationResponse;
 import com.example.controller.dto.UserInput;
 import com.example.models.User;
+import com.example.repository.DbInitializer;
 import com.example.service.UserService;
 
 import jakarta.validation.Valid;
@@ -24,9 +25,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     final UserService userService;
+    final DbInitializer dbInitializer;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, DbInitializer dbInitializer) {
         this.userService = userService;
+        this.dbInitializer = dbInitializer;
     }
 
     @GetMapping
@@ -42,6 +45,12 @@ public class UserController {
     @PostMapping("/signup")
     public User signup(@Valid @RequestBody UserInput userInput) {
         return userService.signup(userInput);
+    }
+
+    @PostMapping("/cleanup-duplicates")
+    public String cleanup() {
+        dbInitializer.cleanupDuplicates();
+        return "Duplicates cleaned up!";
     }
 
 }

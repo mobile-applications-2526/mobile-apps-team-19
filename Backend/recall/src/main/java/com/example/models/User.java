@@ -7,9 +7,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 
 
 @Entity
@@ -30,6 +33,14 @@ public class User{
     private String email;
     @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
+
+    @ManyToMany
+    @JoinTable(
+        name = "user_events",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "event_id")
+    )
+    private List<Event> events;
 
     protected User() {
     }
@@ -84,6 +95,14 @@ public class User{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
     }
 
 }

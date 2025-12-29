@@ -34,7 +34,7 @@ public class EventService {
 
     public void addPictureToEvent(Long eventId, String pictureUrl) {
         Event event = getEventById(eventId);
-        Picture picture = new Picture(pictureUrl, "");
+        Picture picture = new Picture(pictureUrl, "", event);
         if (event != null) {
             event.getPictures().add(picture);
             eventRepository.save(event);

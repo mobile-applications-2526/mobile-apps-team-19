@@ -36,12 +36,29 @@ public class DbInitializer {
                 userRepository.deleteAll();
         }
 
-        @PostConstruct
-        public void init() {
-                clearAll();
+        public void cleanupDuplicates() {
+                // Delete all users except the first occurrence of each username
+                List<User> all = userRepository.findAll();
+                java.util.Set<String> seen = new java.util.HashSet<>();
+                java.util.List<User> toDelete = new java.util.ArrayList<>();
+                
+                for (User u : all) {
+                        if (seen.contains(u.getUsername())) {
+                                toDelete.add(u);
+                        } else {
+                                seen.add(u.getUsername());
+                        }
+                }
+                
+                userRepository.deleteAll(toDelete);
+                System.out.println("Deleted " + toDelete.size() + " duplicate users");
+        }
 
-                // Create Users
-                User admin = userRepository.save(
+        // @PostConstruct
+        public void init() {
+                // Disabled for production
+                /*
+                clearAll();
                                 new User("admin123", "admin@ucll.be", "Admin", "User",
                                                 passwordEncoder.encode("password")));
 
@@ -133,67 +150,68 @@ public class DbInitializer {
                 // Create Pictures for Birthday Party
                 birthdayParty.setPictures(Arrays.asList(
                                 new Picture("https://images.unsplash.com/photo-1530103862676-de8c9debad1d",
-                                                "birthday,celebration,party,fun"),
+                                                "birthday,celebration,party,fun", birthdayParty),
                                 new Picture("https://images.unsplash.com/photo-1464349095431-e9a21285b5f3",
-                                                "birthday,cake,candles,sweet"),
+                                                "birthday,cake,candles,sweet", birthdayParty),
                                 new Picture("https://images.unsplash.com/photo-1514525253161-7a46d19cd819",
-                                                "party,music,concert,celebration")));
+                                                "party,music,concert,celebration", birthdayParty)));
                 eventRepository.save(birthdayParty);
 
                 // Create Pictures for Graduation
                 graduation.setPictures(Arrays.asList(
                                 new Picture("https://images.unsplash.com/photo-1523050854058-8df90110c9f1",
-                                                "graduation,university,education,success"),
+                                                "graduation,university,education,success", graduation),
                                 new Picture("https://images.unsplash.com/photo-1566737236500-c8ac43014a67",
-                                                "graduation,ceremony,achievement,graduate"),
+                                                "graduation,ceremony,achievement,graduate", graduation),
                                 new Picture("https://images.unsplash.com/photo-1541339907198-e08756dedf3f",
-                                                "graduation,celebration,diploma,proud")));
+                                                "graduation,celebration,diploma,proud", graduation)));
                 eventRepository.save(graduation);
 
                 // Create Pictures for Wedding
                 wedding.setPictures(Arrays.asList(
                                 new Picture("https://images.unsplash.com/photo-1519741497674-611481863552",
-                                                "wedding,marriage,couple,love"),
+                                                "wedding,marriage,couple,love", wedding),
                                 new Picture("https://images.unsplash.com/photo-1606800052052-a08af7148866",
-                                                "wedding,bride,groom,ceremony"),
+                                                "wedding,bride,groom,ceremony", wedding),
                                 new Picture("https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6",
-                                                "wedding,flowers,decoration,beautiful"),
+                                                "wedding,flowers,decoration,beautiful", wedding),
                                 new Picture("https://images.unsplash.com/photo-1511285560929-80b456fea0bc",
-                                                "wedding,reception,party,celebration")));
+                                                "wedding,reception,party,celebration", wedding)));
                 eventRepository.save(wedding);
 
                 // Create Pictures for Concert
                 concert.setPictures(Arrays.asList(
                                 new Picture("https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3",
-                                                "concert,music,festival,crowd"),
+                                                "concert,music,festival,crowd", concert),
                                 new Picture("https://images.unsplash.com/photo-1501281668745-f7f57925c3b4",
-                                                "concert,stage,performance,lights"),
+                                                "concert,stage,performance,lights", concert),
                                 new Picture("https://images.unsplash.com/photo-1459749411175-04bf5292ceea",
-                                                "music,festival,summer,outdoor")));
+                                                "music,festival,summer,outdoor", concert)));
                 eventRepository.save(concert);
 
                 // Create Pictures for Conference
                 conference.setPictures(Arrays.asList(
                                 new Picture("https://images.unsplash.com/photo-1540575467063-178a50c2df87",
-                                                "conference,technology,presentation,business"),
+                                                "conference,technology,presentation,business", conference),
                                 new Picture("https://images.unsplash.com/photo-1591115765373-5207764f72e7",
-                                                "conference,networking,professional,tech"),
+                                                "conference,networking,professional,tech", conference),
                                 new Picture("https://images.unsplash.com/photo-1475721027785-f74eccf877e2",
-                                                "conference,speaker,seminar,innovation")));
+                                                "conference,speaker,seminar,innovation", conference)));
                 eventRepository.save(conference);
 
                 // Create Pictures for Reunion
                 reunion.setPictures(Arrays.asList(
                                 new Picture("https://images.unsplash.com/photo-1511795409834-ef04bbd61622",
-                                                "reunion,friends,group,memories"),
+                                                "reunion,friends,group,memories", reunion),
                                 new Picture("https://images.unsplash.com/photo-1529156069898-49953e39b3ac",
-                                                "reunion,party,celebration,together"),
+                                                "reunion,party,celebration,together", reunion),
                                 new Picture("https://images.unsplash.com/photo-1528605248644-14dd04022da1",
-                                                "reunion,dinner,gathering,fun")));
+                                                "reunion,dinner,gathering,fun", reunion)));
                 eventRepository.save(reunion);
 
                 System.out.println("✅ Database initialized with dummy data!");
                 System.out.println("📊 Created: 6 users, 6 events, 21 pictures");
+                */
         }
 
 }

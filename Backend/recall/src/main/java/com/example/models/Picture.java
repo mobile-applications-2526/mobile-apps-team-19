@@ -7,6 +7,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 @Table(name = "pictures")
@@ -20,12 +22,17 @@ public class Picture {
 
     private String hashtags;
 
+    @ManyToOne
+    @JoinColumn(name = "event_id", nullable = false)
+    private Event event;
+
     protected Picture() {
     }
 
-    public Picture(String url, String hashtags) {
+    public Picture(String url, String hashtags, Event event) {
         this.url = url;
         this.hashtags = hashtags;
+        this.event = event;
     }
 
     public long getId() {
@@ -51,6 +58,14 @@ public class Picture {
 
     public void setHashtags(String hashtags) {
         this.hashtags = hashtags;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
     }
 
     public List<String> getHashtagsList() {

@@ -21,6 +21,10 @@ public class PictureService {
         return picturesRepository.findById(id).orElse(null);
     }
 
+    public Picture savePicture(Picture picture) {
+        return picturesRepository.save(picture);
+    }
+
     public List<Picture> getPicturesByHashtag(String hashtag) {
         List<Picture> result = new ArrayList<>();
         List<Picture> pictures = picturesRepository.findAll();
@@ -30,10 +34,6 @@ public class PictureService {
             }
         }
         return result;
-
     }
-
-
-
-    
 }
+

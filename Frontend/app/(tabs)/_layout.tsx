@@ -4,7 +4,7 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { HapticTab } from "@/components/haptic-tab";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { Colors } from "@/constants/theme";
-import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useThemeMode } from "@/theme/ThemeProvider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import {
@@ -16,7 +16,8 @@ import {
 } from "lucide-react-native";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const { themeMode } = useThemeMode();
+  const colors = Colors[themeMode];
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const checkLoginStatus = async () => {
@@ -71,9 +72,15 @@ export default function TabLayout() {
         headerShown: false,
         tabBarShowLabel: true,
         tabBarLabelPosition: "below-icon",
-        tabBarActiveTintColor: "#7C3AED", // purple
-        tabBarInactiveTintColor: "#9CA3AF",
-        tabBarStyle: styles.tabBar,
+        tabBarActiveTintColor: "#7C3AED",
+        tabBarInactiveTintColor: themeMode === "dark" ? "#9CA3AF" : "#6B7280",
+        tabBarStyle: [
+          styles.tabBar,
+          {
+            backgroundColor: colors.background,
+            borderColor: themeMode === "dark" ? "#1F2937" : "#E5E7EB",
+          },
+        ],
         tabBarLabelStyle: styles.label,
       }}
     >
@@ -126,16 +133,16 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
   tabBar: {
     position: "absolute",
-    bottom: 16,
+    bottom: 0,
     left: "5%",
     right: "5%",
     height: 80,
-    borderRadius: 20,
-    backgroundColor: "#FFFFFF",
+    borderRadius: 0,
+    borderWidth: 1,
     elevation: 5,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.08,
     shadowRadius: 8,
     paddingHorizontal: 8,
     paddingBottom: 8,

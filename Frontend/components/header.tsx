@@ -2,19 +2,19 @@ import React, { useCallback, useState } from "react";
 import { View, StyleSheet, Text, Pressable, Image } from "react-native";
 import { ThemedText } from "./themed-text";
 import { Colors } from "@/constants/theme";
-import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useRouter } from "expo-router";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { Moon, Sun } from "lucide-react-native";
+import { useThemeMode } from "@/theme/ThemeProvider";
 
 interface HeaderProps {
   title?: string;
 }
 
 export function Header({ title = "Recall" }: HeaderProps) {
-  const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme ?? "light"];
+  const { themeMode, toggleTheme } = useThemeMode();
+  const colors = Colors[themeMode ?? "light"];
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -39,7 +39,7 @@ export function Header({ title = "Recall" }: HeaderProps) {
   };
 
   return (
-    <View style={[styles.header]}>
+    <View style={styles.header}>
       <View style={styles.titleContainer}>
         <Image
           source={require("../assets/logo/Logo.png")}
@@ -51,15 +51,32 @@ export function Header({ title = "Recall" }: HeaderProps) {
         </ThemedText>
       </View>
 
-      {isLoggedIn ? (
-        <Pressable onPress={handleLogout} style={styles.logoutButton}>
-          <Text style={styles.logoutText}>Logout</Text>
+      <View style={styles.actions}>
+        <Pressable
+          onPress={toggleTheme}
+          style={({ pressed }) => [
+            styles.themeButton,
+            pressed && { opacity: 0.85 },
+            { backgroundColor: themeMode === "dark" ? "#1F2937" : "#F3F4F6" },
+          ]}
+        >
+          {themeMode === "dark" ? (
+            <Moon size={18} color="#FCD34D" />
+          ) : (
+            <Sun size={18} color="#F59E0B" />
+          )}
         </Pressable>
-      ) : (
-        <Pressable onPress={handleLogin} style={styles.loginButton}>
-          <Text style={styles.loginText}>Login</Text>
-        </Pressable>
-      )}
+
+        {isLoggedIn ? (
+          <Pressable onPress={handleLogout} style={styles.logoutButton}>
+            <Text style={styles.logoutText}>Logout</Text>
+          </Pressable>
+        ) : (
+          <Pressable onPress={handleLogin} style={styles.loginButton}>
+            <Text style={styles.loginText}>Login</Text>
+          </Pressable>
+        )}
+      </View>
     </View>
   );
 }
@@ -72,7 +89,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 16,
-    backgroundColor: "#7C3AED", // Nice purple background
+    backgroundColor: "#7C3AED",
     borderBottomWidth: 1,
     borderBottomColor: "#6D28D9",
   },
@@ -89,6 +106,21 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 50,
     fontWeight: "700",
+  },
+  actions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  themeButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#D1D5DB",
+    backgroundColor: "#FFFFFF",
   },
   loginButton: {
     backgroundColor: "#A78BFA", // Less purple button

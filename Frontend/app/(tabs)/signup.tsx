@@ -14,11 +14,14 @@ import {
   View,
   KeyboardAvoidingView,
   Platform,
+  useWindowDimensions,
 } from "react-native";
 
 export default function SignupScreen() {
   const { themeMode } = useThemeMode();
   const colors = Colors[themeMode];
+  const { width } = useWindowDimensions();
+  const isSmallScreen = width < 600;
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
@@ -80,13 +83,26 @@ export default function SignupScreen() {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.formWrapper}>
-            <ThemedText style={styles.title}>Create Account</ThemedText>
-            <ThemedText style={[styles.subtitle, { color: colors.icon }]}>
+            <ThemedText
+              style={[styles.title, { fontSize: isSmallScreen ? 24 : 32 }]}
+            >
+              Create Account
+            </ThemedText>
+            <ThemedText
+              style={[
+                styles.subtitle,
+                { color: colors.icon, fontSize: isSmallScreen ? 14 : 16 },
+              ]}
+            >
               Join us today
             </ThemedText>
 
             <View style={styles.formContainer}>
-              <ThemedText style={styles.label}>First Name</ThemedText>
+              <ThemedText
+                style={[styles.label, { fontSize: isSmallScreen ? 14 : 16 }]}
+              >
+                First Name
+              </ThemedText>
               <TextInput
                 style={[
                   styles.input,
@@ -95,6 +111,8 @@ export default function SignupScreen() {
                       themeMode === "dark" ? "#1F2937" : "#F9FAFB",
                     color: colors.text,
                     borderColor: themeMode === "dark" ? "#374151" : "#E5E7EB",
+                    fontSize: isSmallScreen ? 14 : 16,
+                    padding: isSmallScreen ? 12 : 16,
                   },
                 ]}
                 placeholder="Enter your first name"

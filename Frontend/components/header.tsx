@@ -1,5 +1,12 @@
 import React, { useCallback, useState } from "react";
-import { View, StyleSheet, Text, Pressable, Image } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Pressable,
+  Image,
+  useWindowDimensions,
+} from "react-native";
 import { ThemedText } from "./themed-text";
 import { Colors } from "@/constants/theme";
 import { useRouter } from "expo-router";
@@ -17,6 +24,10 @@ export function Header({ title = "Recall" }: HeaderProps) {
   const colors = Colors[themeMode ?? "light"];
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { width } = useWindowDimensions();
+  const isSmallScreen = width < 600;
+  const logoSize = isSmallScreen ? 45 : 60;
+  const titleFontSize = isSmallScreen ? 28 : 50;
 
   useFocusEffect(
     useCallback(() => {
@@ -47,10 +58,13 @@ export function Header({ title = "Recall" }: HeaderProps) {
         >
           <Image
             source={require("../assets/logo/Logo.png")}
-            style={styles.logo}
+            style={[styles.logo, { width: logoSize, height: logoSize }]}
             resizeMode="contain"
           />
-          <ThemedText type="title" style={styles.titleText}>
+          <ThemedText
+            type="title"
+            style={[styles.titleText, { fontSize: titleFontSize }]}
+          >
             {title}
           </ThemedText>
         </Pressable>
@@ -91,9 +105,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 16,
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 12,
     backgroundColor: "#7C3AED",
     borderBottomWidth: 1,
     borderBottomColor: "#6D28D9",
@@ -106,13 +120,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: {
-    width: 60,
-    height: 60,
-    marginRight: 12,
+    marginRight: 8,
   },
   titleText: {
     color: "#FFFFFF",
-    fontSize: 50,
     fontWeight: "700",
   },
   actions: {
@@ -131,25 +142,25 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
   },
   loginButton: {
-    backgroundColor: "#A78BFA", // Less purple button
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    backgroundColor: "#A78BFA",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
     borderRadius: 8,
   },
   loginText: {
     color: "#FFFFFF",
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "600",
   },
   logoutButton: {
     backgroundColor: "#A78BFA",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
     borderRadius: 8,
   },
   logoutText: {
     color: "#FFFFFF",
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "600",
   },
 });

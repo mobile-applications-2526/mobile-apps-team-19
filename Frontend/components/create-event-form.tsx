@@ -11,6 +11,7 @@ import {
   Text,
   TextInput,
   View,
+  useWindowDimensions,
 } from "react-native";
 
 type CreateEventFormProps = {
@@ -21,6 +22,8 @@ type CreateEventFormProps = {
 export function CreateEventForm({ onSuccess, onCancel }: CreateEventFormProps) {
   const { themeMode } = useThemeMode();
   const colors = Colors[themeMode ?? "light"];
+  const { width } = useWindowDimensions();
+  const isSmallScreen = width < 600;
 
   const [name, setName] = useState("");
   const [date, setDate] = useState("");

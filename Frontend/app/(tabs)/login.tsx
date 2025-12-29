@@ -16,6 +16,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  useWindowDimensions,
 } from "react-native";
 
 export default function LoginScreen() {
@@ -23,6 +24,8 @@ export default function LoginScreen() {
   const colors = Colors[themeMode];
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { width } = useWindowDimensions();
+  const isSmallScreen = width < 600;
 
   const handleLogin = async () => {
     if (!username || !password) {
@@ -74,13 +77,26 @@ export default function LoginScreen() {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.formWrapper}>
-            <ThemedText style={styles.title}>Welcome Back</ThemedText>
-            <ThemedText style={[styles.subtitle, { color: colors.icon }]}>
+            <ThemedText
+              style={[styles.title, { fontSize: isSmallScreen ? 24 : 32 }]}
+            >
+              Welcome Back
+            </ThemedText>
+            <ThemedText
+              style={[
+                styles.subtitle,
+                { color: colors.icon, fontSize: isSmallScreen ? 14 : 16 },
+              ]}
+            >
               Sign in to continue
             </ThemedText>
 
             <View style={styles.formContainer}>
-              <ThemedText style={styles.label}>Username or Email</ThemedText>
+              <ThemedText
+                style={[styles.label, { fontSize: isSmallScreen ? 14 : 16 }]}
+              >
+                Username or Email
+              </ThemedText>
               <TextInput
                 style={[
                   styles.input,
@@ -89,6 +105,8 @@ export default function LoginScreen() {
                       themeMode === "dark" ? "#1F2937" : "#F9FAFB",
                     color: colors.text,
                     borderColor: themeMode === "dark" ? "#374151" : "#E5E7EB",
+                    fontSize: isSmallScreen ? 14 : 16,
+                    padding: isSmallScreen ? 12 : 16,
                   },
                 ]}
                 placeholder="Enter your username"
@@ -98,7 +116,11 @@ export default function LoginScreen() {
                 autoCapitalize="none"
               />
 
-              <ThemedText style={styles.label}>Password</ThemedText>
+              <ThemedText
+                style={[styles.label, { fontSize: isSmallScreen ? 14 : 16 }]}
+              >
+                Password
+              </ThemedText>
               <TextInput
                 style={[
                   styles.input,
@@ -107,6 +129,8 @@ export default function LoginScreen() {
                       themeMode === "dark" ? "#1F2937" : "#F9FAFB",
                     color: colors.text,
                     borderColor: themeMode === "dark" ? "#374151" : "#E5E7EB",
+                    fontSize: isSmallScreen ? 14 : 16,
+                    padding: isSmallScreen ? 12 : 16,
                   },
                 ]}
                 placeholder="Enter your password"
@@ -117,16 +141,38 @@ export default function LoginScreen() {
                 autoCapitalize="none"
               />
 
-              <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                <ThemedText style={styles.buttonText}>Login</ThemedText>
+              <TouchableOpacity
+                style={[styles.button, { padding: isSmallScreen ? 12 : 16 }]}
+                onPress={handleLogin}
+              >
+                <ThemedText
+                  style={[
+                    styles.buttonText,
+                    { fontSize: isSmallScreen ? 16 : 18 },
+                  ]}
+                >
+                  Login
+                </ThemedText>
               </TouchableOpacity>
 
               <View style={styles.signupContainer}>
-                <ThemedText style={[styles.signupText, { color: colors.text }]}>
+                <ThemedText
+                  style={[
+                    styles.signupText,
+                    { color: colors.text, fontSize: isSmallScreen ? 12 : 14 },
+                  ]}
+                >
                   Don't have an account?{" "}
                 </ThemedText>
                 <TouchableOpacity onPress={() => router.push("/(tabs)/signup")}>
-                  <ThemedText style={styles.signupLink}>Sign up</ThemedText>
+                  <ThemedText
+                    style={[
+                      styles.signupLink,
+                      { fontSize: isSmallScreen ? 12 : 14 },
+                    ]}
+                  >
+                    Sign up
+                  </ThemedText>
                 </TouchableOpacity>
               </View>
             </View>
@@ -148,7 +194,8 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     paddingHorizontal: "5%",
-    paddingVertical: 20,
+    paddingVertical: 15,
+    paddingBottom: 40,
   },
   formWrapper: {
     width: "100%",
@@ -156,37 +203,32 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   title: {
-    fontSize: 32,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 8,
+    marginBottom: 6,
   },
   subtitle: {
-    fontSize: 16,
     textAlign: "center",
-    marginBottom: 40,
+    marginBottom: 25,
   },
   formContainer: {
     width: "100%",
   },
   label: {
-    fontSize: 16,
-    marginBottom: 8,
+    marginBottom: 6,
     fontWeight: "600",
   },
   input: {
     borderRadius: 12,
-    padding: 16,
     fontSize: 16,
-    marginBottom: 20,
+    marginBottom: 15,
     borderWidth: 1,
   },
   button: {
     backgroundColor: "#7C3AED",
     borderRadius: 12,
-    padding: 16,
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 8,
     shadowColor: "#7C3AED",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -195,7 +237,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#fff",
-    fontSize: 18,
     fontWeight: "bold",
   },
   signupContainer: {
@@ -205,11 +246,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     gap: 4,
   },
-  signupText: {
-    fontSize: 14,
-  },
+  signupText: {},
   signupLink: {
-    fontSize: 14,
     fontWeight: "bold",
     color: "#7C3AED",
   },

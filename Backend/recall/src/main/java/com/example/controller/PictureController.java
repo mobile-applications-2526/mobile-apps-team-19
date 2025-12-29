@@ -31,7 +31,7 @@ public class PictureController {
     }
 
     @GetMapping("/hashtag/{hashtag}")
-    public Picture getPictureByHashtag(@PathVariable String hashtag) {
-        return pictureService.getPictureByHashtag(hashtag);
+    public List<Picture> getPicturesByHashtag(@PathVariable String hashtag) {
+        return pictureService.getPicturesByHashtag(hashtag);
     }
 }

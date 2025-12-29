@@ -1,4 +1,5 @@
 package com.example.service;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import com.example.models.Picture;
@@ -20,15 +21,16 @@ public class PictureService {
         return picturesRepository.findById(id).orElse(null);
     }
 
-    public Picture getPictureByHashtag(String hashtag) {
-        List<Picture> allPictures = picturesRepository.findAll();
-        for (Picture picture : allPictures) {
-            List<String> hashtagsList = picture.getHashtagsList();
-            if (hashtagsList.contains(hashtag)) {
-                return picture;
+    public List<Picture> getPicturesByHashtag(String hashtag) {
+        List<Picture> result = new ArrayList<>();
+        List<Picture> pictures = picturesRepository.findAll();
+        for (Picture pic : pictures) {
+            if (pic.getHashtags().contains(hashtag)) {
+                result.add(pic);
             }
         }
-        return null;
+        return result;
+
     }
 
 

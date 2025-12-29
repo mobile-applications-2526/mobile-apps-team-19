@@ -2,8 +2,8 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useState } from "react";
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import { useCallback, useState } from "react";
 import { ActivityIndicator, Dimensions, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 type Picture = {
@@ -12,6 +12,7 @@ type Picture = {
 };
 
 type EventDetails = {
+    id?: number;
     name: string;
     date: string;
     hostName?: string;
@@ -23,7 +24,7 @@ type EventDetails = {
 };
 
 export default function EventDetailsScreen() {
-    const { id, title } = useLocalSearchParams<{ id: string; title: string }>();
+    const { id, title, eventId: paramEventId, eventName: paramEventName } = useLocalSearchParams<{ id: string; title: string; eventId?: string; eventName?: string }>();
     const router = useRouter();
     const [event, setEvent] = useState<EventDetails | null>(null);
     const [loading, setLoading] = useState(true);
@@ -34,9 +35,12 @@ export default function EventDetailsScreen() {
     const screenWidth = Dimensions.get('window').width;
     const imageSize = (screenWidth - 48) / 3; // 3 columns with padding
 
-    useEffect(() => {
-        fetchEventDetails();
-    }, [id]);
+    // Refresh event details when screen comes into focus
+    useFocusEffect(
+        useCallback(() => {
+            fetchEventDetails();
+        }, [id, title])
+    );
 
     const fetchEventDetails = async () => {
         try {
@@ -89,7 +93,12 @@ export default function EventDetailsScreen() {
                 throw new Error('Event not found');
             }
 
+            console.log('Event data from API:', eventData);
+            console.log('Event data keys:', Object.keys(eventData));
+            console.log('Event ID field:', eventData.id, eventData.eventId);
+
             setEvent({
+                id: eventData.id,
                 name: eventData.name,
                 date: eventData.date,
                 hostName: eventData.hostName,
@@ -123,7 +132,28 @@ export default function EventDetailsScreen() {
     };
 
     const handleCameraPress = () => {
-        router.push('/camera-test');
+        // Use event name as identifier since backend doesn't return numeric IDs
+        const identifier = paramEventName || event?.name || title;
+
+        console.log('Camera button pressed:', {
+            paramEventName,
+            eventName: event?.name,
+            identifier,
+            fullEvent: event
+        });
+
+        if (!identifier) {
+            console.error('No event identifier available', { paramEventName, eventName: event?.name, title, event });
+            alert('Cannot open camera: Event name is missing. Please try reopening this event from the events list.');
+            return;
+        }
+
+        router.push({
+            pathname: '/camera-test',
+            params: {
+                eventName: identifier,
+            },
+        });
     };
 
     if (loading) {

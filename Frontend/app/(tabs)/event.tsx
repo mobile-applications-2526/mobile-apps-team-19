@@ -109,15 +109,19 @@ export default function EventScreen() {
 
 
       if (Array.isArray(data)) {
+        console.log('Raw event data from backend:', data[0]); // Log first event to see structure
+        console.log('Raw event keys:', data[0] ? Object.keys(data[0]) : 'no events');
         const mappedEvents = data.map(event => ({
           id: event.id?.toString() || `${event.name}-${event.date}`,
           eventId: event.id, // Keep numeric ID for backend operations
+          eventName: event.name, // Store name as fallback identifier
           title: event.name || event.title,
           date: event.date,
           location: event.location || event.hostName,
           photoCount: event.pictures?.length || 0,
           usernames: event.usernames || [],
         }));
+        console.log('Mapped event example:', mappedEvents[0]);
 
         setAllEvents(mappedEvents);
 
@@ -150,11 +154,13 @@ export default function EventScreen() {
   };
 
   const handleEventPress = (event: Event) => {
-    console.log('Event pressed:', event.title);
+    console.log('Event pressed:', event.title, 'with eventId:', event.eventId, 'eventName:', event.eventName, 'full event:', event);
     router.push({
       pathname: '/event-details',
       params: {
         id: event.id,
+        eventId: event.eventId?.toString() || '',
+        eventName: event.eventName || event.title,
         title: event.title,
       },
     });

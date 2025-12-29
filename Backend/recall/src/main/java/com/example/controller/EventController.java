@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.Authentication;
 
+import com.example.controller.dto.PictureRequest;
 import com.example.models.Event;
 import com.example.service.EventService;
 
@@ -35,10 +36,12 @@ public class EventController {
 
     }
 
-    @PostMapping("/{eventId}/add-picture")
-    public void addPictureToEvent(@PathVariable Long eventId, @RequestBody String pictureUrl) {
-        eventService.addPictureToEvent(eventId, pictureUrl);
+    @PostMapping("/{event}/add-picture")
+    public void addPictureToEvent(@PathVariable("event") String eventName,
+                                @RequestBody PictureRequest request) {
+        eventService.addPictureToEvent(eventName, request.getUrl());
     }
+
 
     @PostMapping("/{eventName}/join")
     public void addCurrentUserToEvent(@PathVariable String eventName, @RequestBody String username) {

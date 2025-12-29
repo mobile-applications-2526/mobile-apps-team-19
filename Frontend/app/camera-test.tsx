@@ -1,14 +1,17 @@
-import React, { useState, useRef } from 'react';
-import { StyleSheet, View, Pressable, Text, Alert } from 'react-native';
-import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
-import { useRouter } from 'expo-router';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { savePictureToBackend, uploadImageToSupabase } from '@/service/supabaseService';
+import { CameraType, CameraView, useCameraPermissions } from 'expo-camera';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useRef, useState } from 'react';
+import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 
 export default function CameraTestScreen() {
   const router = useRouter();
+  const { eventName } = useLocalSearchParams<{ eventName: string }>();
   const [facing, setFacing] = useState<CameraType>('back');
   const [permission, requestPermission] = useCameraPermissions();
+  const [uploading, setUploading] = useState(false);
   const cameraRef = useRef<CameraView>(null);
 
   if (!permission) {
@@ -41,33 +44,97 @@ export default function CameraTestScreen() {
   };
 
   const takePicture = async () => {
-    if (cameraRef.current) {
-      try {
-        const photo = await cameraRef.current.takePictureAsync();
-        Alert.alert('Photo Taken!', `Photo saved at: ${photo?.uri}`);
-        console.log('Photo:', photo);
-      } catch (error) {
-        Alert.alert('Error', 'Failed to take picture');
-        console.error(error);
+    if (!cameraRef.current) {
+      return;
+    }
+
+    if (!eventName) {
+      Alert.alert('Error', 'No event name provided');
+      return;
+    }
+
+    try {
+      setUploading(true);
+
+      // Take the picture
+      const photo = await cameraRef.current.takePictureAsync();
+
+      if (!photo?.uri) {
+        throw new Error('No photo URI received');
       }
+
+      console.log('Photo taken:', photo.uri);
+
+      // Upload to Supabase
+      console.log('Uploading to Supabase...');
+      const imageUrl = await uploadImageToSupabase(photo.uri, eventName);
+      console.log('Image uploaded to Supabase:', imageUrl);
+
+      // Save URL to backend
+      console.log('Saving to backend...');
+      await savePictureToBackend(eventName, imageUrl);
+      console.log('Picture saved to backend successfully');
+
+      Alert.alert(
+        'Success!',
+        'Photo uploaded successfully',
+        [
+          {
+            text: 'OK',
+            onPress: () => router.back(),
+          },
+        ]
+      );
+    } catch (error) {
+      console.error('Error taking/uploading picture:', error);
+      Alert.alert(
+        'Error',
+        error instanceof Error ? error.message : 'Failed to upload picture'
+      );
+    } finally {
+      setUploading(false);
     }
   };
 
   return (
     <ThemedView style={styles.container}>
       <CameraView style={styles.camera} facing={facing} ref={cameraRef}>
+        {/* Event Info Header */}
+        {eventName && (
+          <View style={styles.eventInfoContainer}>
+            <Text style={styles.eventInfoText}>📸 {eventName}</Text>
+          </View>
+        )}
+
+        {/* Loading Overlay */}
+        {uploading && (
+          <View style={styles.loadingOverlay}>
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#FFFFFF" />
+              <Text style={styles.loadingText}>Uploading photo...</Text>
+            </View>
+          </View>
+        )}
+
         <View style={styles.buttonContainer}>
-          <Pressable style={styles.flipButton} onPress={toggleCameraFacing}>
+          <Pressable
+            style={styles.flipButton}
+            onPress={toggleCameraFacing}
+            disabled={uploading}>
             <Text style={styles.buttonText}>🔄</Text>
           </Pressable>
 
-          <Pressable style={styles.captureButton} onPress={takePicture}>
+          <Pressable
+            style={[styles.captureButton, uploading && styles.captureButtonDisabled]}
+            onPress={takePicture}
+            disabled={uploading}>
             <View style={styles.captureButtonInner} />
           </Pressable>
 
           <Pressable
             style={styles.closeButton}
-            onPress={() => router.back()}>
+            onPress={() => router.back()}
+            disabled={uploading}>
             <Text style={styles.buttonText}>✕</Text>
           </Pressable>
         </View>
@@ -122,6 +189,39 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'space-between',
   },
+  eventInfoContainer: {
+    position: 'absolute',
+    top: 60,
+    left: 20,
+    right: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    padding: 12,
+    borderRadius: 8,
+  },
+  eventInfoText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingContainer: {
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    padding: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  loadingText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    marginTop: 12,
+    fontWeight: '600',
+  },
   flipButton: {
     width: 60,
     height: 60,
@@ -152,9 +252,12 @@ const styles = StyleSheet.create({
     borderColor: '#FFFFFF',
   },
   captureButtonInner: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+    width: 70,
+    height: 70,
+    borderRadius: 35,
     backgroundColor: '#FFFFFF',
+  },
+  captureButtonDisabled: {
+    opacity: 0.5,
   },
 });

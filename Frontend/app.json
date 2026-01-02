@@ -13,8 +13,10 @@
       "infoPlist": {
         "NSCameraUsageDescription": "Recall needs access to your camera to take event photos.",
         "NSPhotoLibraryUsageDescription": "Recall needs access to your photo library to save and upload event photos.",
-        "NSPhotoLibraryAddUsageDescription": "Recall needs access to save photos to your library."
-      }
+        "NSPhotoLibraryAddUsageDescription": "Recall needs access to save photos to your library.",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "com.meast04.Recall"
     },
     "android": {
       "permissions": [
@@ -30,7 +32,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.meast04.Recall"
     },
     "web": {
       "output": "static",
@@ -54,6 +57,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "f7644e2d-a83d-4e96-b93f-163e6c7a9054"
+      }
     }
   }
 }

@@ -1,6 +1,7 @@
 # Azure App Service Deployment Guide
 
 ## Prerequisites
+
 - Azure account ([Free tier available](https://azure.microsoft.com/free/))
 - Azure CLI installed: `winget install Microsoft.AzureCLI`
 - Docker Desktop installed and running
@@ -156,6 +157,7 @@ echo "Your API is deployed at: https://$APP_NAME.azurewebsites.net"
 ## Update Frontend Configuration
 
 Update your Frontend `.env` file with the deployed API URL:
+
 ```
 EXPO_PUBLIC_API_URL=https://recall-backend-api.azurewebsites.net
 ```

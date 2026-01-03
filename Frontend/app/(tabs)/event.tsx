@@ -3,7 +3,6 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { Header } from "@/components/header";
 import { Colors } from "@/constants/theme";
-import { useColorScheme } from "@/hooks/use-color-scheme";
 import { joinEvent } from "@/service/eventService";
 import { type Event } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -21,6 +20,7 @@ import {
   View,
 } from "react-native";
 import { useAuth } from "@/context/AuthContext";
+import { useThemeMode } from "@/theme/ThemeProvider";
 
 export default function EventScreen() {
   const [allEvents, setAllEvents] = useState<Event[]>([]);
@@ -31,8 +31,12 @@ export default function EventScreen() {
   const [error, setError] = useState<string | null>(null);
   const { isLoggedIn } = useAuth();
   const [currentUsername, setCurrentUsername] = useState<string | null>(null);
-  const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme ?? "light"];
+  const { themeMode } = useThemeMode();
+  const colors = Colors[themeMode];
+  const accent = "#d946ef";
+  const surface = themeMode === "dark" ? "#1f1f24" : "#ffffff";
+  const border = themeMode === "dark" ? "#2d2d33" : "#e5e7eb";
+  const muted = themeMode === "dark" ? "#9BA1A6" : "#555";
   const router = useRouter();
 
   const fetchEvents = async (username: string | null) => {
@@ -184,10 +188,12 @@ export default function EventScreen() {
 
   if (!isLoggedIn) {
     return (
-      <ThemedView style={styles.container}>
+      <ThemedView
+        style={[styles.container, { backgroundColor: colors.background }]}
+      >
         <Header />
         <ThemedView style={styles.centerContainer}>
-          <ThemedText style={styles.errorText}>
+          <ThemedText style={[styles.errorText, { color: colors.text }]}>
             Please log in to view events.
           </ThemedText>
         </ThemedView>
@@ -295,22 +301,30 @@ export default function EventScreen() {
 
   if (loading) {
     return (
-      <ThemedView style={styles.centerContainer}>
-        <ActivityIndicator size="large" color={colors.tint} />
+      <ThemedView
+        style={[styles.centerContainer, { backgroundColor: colors.background }]}
+      >
+        <ActivityIndicator size="large" color={accent} />
       </ThemedView>
     );
   }
 
   if (error) {
     return (
-      <ThemedView style={styles.centerContainer}>
-        <ThemedText style={styles.errorText}>Error: {error}</ThemedText>
+      <ThemedView
+        style={[styles.centerContainer, { backgroundColor: colors.background }]}
+      >
+        <ThemedText style={[styles.errorText, { color: colors.text }]}>
+          Error: {error}
+        </ThemedText>
       </ThemedView>
     );
   }
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <Header />
       <View style={styles.header}>
         {/* Search Bar */}
@@ -318,16 +332,16 @@ export default function EventScreen() {
           style={[
             styles.searchContainer,
             {
-              backgroundColor: colors.background,
-              borderColor: colors.icon + "40",
+              backgroundColor: surface,
+              borderColor: border,
             },
           ]}
         >
-          <Text style={styles.searchIcon}>🔍</Text>
+          <Text style={[styles.searchIcon, { color: muted }]}>🔍</Text>
           <TextInput
             style={[styles.searchInput, { color: colors.text }]}
             placeholder="Search events to join..."
-            placeholderTextColor={colors.icon}
+            placeholderTextColor={muted}
             value={searchQuery}
             onChangeText={handleSearch}
           />
@@ -336,13 +350,13 @@ export default function EventScreen() {
               onPress={() => handleSearch("")}
               style={styles.clearButton}
             >
-              <Text style={styles.clearIcon}>✕</Text>
+              <Text style={[styles.clearIcon, { color: muted }]}>✕</Text>
             </Pressable>
           )}
         </View>
 
         {showAllEvents && searchQuery && (
-          <ThemedText style={[styles.searchInfo, { color: colors.icon }]}>
+          <ThemedText style={[styles.searchInfo, { color: muted }]}>
             Showing all events matching "{searchQuery}"
           </ThemedText>
         )}
@@ -361,10 +375,12 @@ export default function EventScreen() {
               <EventCard event={item} onPress={() => handleEventPress(item)} />
               {showAllEvents && !isMember && (
                 <Pressable
-                  style={[styles.joinButton, { backgroundColor: "#007AFF" }]}
+                  style={[styles.joinButton, { backgroundColor: accent }]}
                   onPress={() => handleJoinEvent(item)}
                 >
-                  <Text style={styles.joinButtonText}>Join Event</Text>
+                  <ThemedText style={styles.joinButtonText}>
+                    Join Event
+                  </ThemedText>
                 </Pressable>
               )}
             </View>
@@ -373,10 +389,10 @@ export default function EventScreen() {
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <ThemedText style={styles.emptyText}>
+            <ThemedText style={[styles.emptyText, { color: colors.text }]}>
               {searchQuery ? "No events found" : "No events yet"}
             </ThemedText>
-            <ThemedText style={[styles.emptySubtext, { color: colors.icon }]}>
+            <ThemedText style={[styles.emptySubtext, { color: muted }]}>
               {searchQuery
                 ? "Try a different search term"
                 : "Create your first event to get started"}
@@ -399,7 +415,7 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 20,
-    paddingTop: 0,
+    paddingTop: 40,
     paddingBottom: 16,
   },
   headerTitle: {
@@ -430,7 +446,6 @@ const styles = StyleSheet.create({
   },
   clearIcon: {
     fontSize: 16,
-    color: "#999",
   },
   searchInfo: {
     fontSize: 14,

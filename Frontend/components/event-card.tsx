@@ -1,111 +1,124 @@
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
-import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Colors } from "@/constants/theme";
+import { useThemeMode } from "@/theme/ThemeProvider";
+import React from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { ThemedText } from "@/components/themed-text";
 
 export type Event = {
-    id: string;
-    title: string;
-    date?: string;
-    dateRange?: string;
-    location?: string;
-    photoCount?: number;
-    description?: string;
-    usernames?: string[];
+  id: string;
+  title: string;
+  date?: string;
+  dateRange?: string;
+  location?: string;
+  photoCount?: number;
+  description?: string;
+  usernames?: string[];
 };
 
 type EventCardProps = {
-    event: Event;
-    onPress: () => void;
+  event: Event;
+  onPress: () => void;
 };
 
 export function EventCard({ event, onPress }: EventCardProps) {
-    const colorScheme = useColorScheme();
-    const colors = Colors[colorScheme ?? 'light'];
+  const { themeMode } = useThemeMode();
+  const colors = Colors[themeMode];
+  const accent = "#d946ef";
+  const surface = themeMode === "dark" ? "#1f1f24" : "#ffffff";
+  const border = themeMode === "dark" ? "#2d2d33" : "#e5e7eb";
+  const muted = themeMode === "dark" ? "#9BA1A6" : "#555";
 
-    const displayDate = event.dateRange || event.date || 'Date not set';
-    const photoInfo = event.photoCount !== undefined
-        ? `${event.photoCount} ${event.photoCount === 1 ? 'photo' : 'photos'}`
-        : null;
+  const displayDate = event.dateRange || event.date || "Date not set";
+  const photoInfo =
+    event.photoCount !== undefined
+      ? `${event.photoCount} ${event.photoCount === 1 ? "photo" : "photos"}`
+      : null;
 
-    return (
-        <Pressable
-            style={({ pressed }) => [
-                styles.card,
-                {
-                    backgroundColor: colors.background,
-                    borderColor: colors.icon + '20',
-                },
-                pressed && styles.cardPressed,
-            ]}
-            onPress={onPress}>
-            <View style={styles.iconPill}>
-                <Text style={styles.iconText}>📅</Text>
-            </View>
+  return (
+    <Pressable
+      style={({ pressed }) => [
+        styles.card,
+        {
+          backgroundColor: surface,
+          borderColor: border,
+          shadowColor: themeMode === "dark" ? "#000" : accent,
+        },
+        pressed && styles.cardPressed,
+      ]}
+      onPress={onPress}
+    >
+      <View style={styles.iconPill}>
+        <Text style={[styles.iconText, { color: accent }]}>📅</Text>
+      </View>
 
-            <View style={styles.details}>
-                <Text style={[styles.title, { color: colors.text }]} numberOfLines={1}>
-                    {event.title}
-                </Text>
-                <Text style={[styles.meta, { color: colors.icon }]}>
-                    {photoInfo ? `${photoInfo} · ${displayDate}` : displayDate}
-                </Text>
-                {event.location && (
-                    <Text style={[styles.location, { color: colors.icon }]} numberOfLines={1}>
-                        📍 {event.location}
-                    </Text>
-                )}
-            </View>
-        </Pressable>
-    );
+      <View style={styles.details}>
+        <ThemedText
+          style={[styles.title, { color: colors.text }]}
+          numberOfLines={1}
+        >
+          {event.title}
+        </ThemedText>
+        <ThemedText style={[styles.meta, { color: muted }]}>
+          {photoInfo ? `${photoInfo} · ${displayDate}` : displayDate}
+        </ThemedText>
+        {event.location && (
+          <ThemedText
+            style={[styles.location, { color: muted }]}
+            numberOfLines={1}
+          >
+            📍 {event.location}
+          </ThemedText>
+        )}
+      </View>
+    </Pressable>
+  );
 }
 
 const styles = StyleSheet.create({
-    card: {
-        flexDirection: 'row',
-        padding: 16,
-        marginHorizontal: 16,
-        marginVertical: 8,
-        borderRadius: 12,
-        borderWidth: 1,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
-        alignItems: 'center',
-    },
-    cardPressed: {
-        opacity: 0.7,
-        transform: [{ scale: 0.98 }],
-    },
-    iconPill: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        backgroundColor: '#007AFF20',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: 16,
-    },
-    iconText: {
-        fontSize: 28,
-    },
-    details: {
-        flex: 1,
-        justifyContent: 'center',
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: '600',
-        marginBottom: 4,
-    },
-    meta: {
-        fontSize: 14,
-        marginBottom: 2,
-    },
-    location: {
-        fontSize: 13,
-        marginTop: 4,
-    },
+  card: {
+    flexDirection: "row",
+    padding: 16,
+    marginHorizontal: 16,
+    marginVertical: 8,
+    borderRadius: 14,
+    borderWidth: 1,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    elevation: 2,
+    alignItems: "center",
+    gap: 12,
+  },
+  cardPressed: {
+    opacity: 0.7,
+    transform: [{ scale: 0.98 }],
+  },
+  iconPill: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    backgroundColor: "#d946ef1a",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  iconText: {
+    fontSize: 28,
+  },
+  details: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 4,
+  },
+  meta: {
+    fontSize: 14,
+    marginBottom: 2,
+  },
+  location: {
+    fontSize: 13,
+    marginTop: 4,
+  },
 });

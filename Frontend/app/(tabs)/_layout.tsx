@@ -1,53 +1,24 @@
 import { Tabs } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { HapticTab } from "@/components/haptic-tab";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { Colors } from "@/constants/theme";
 import { useThemeMode } from "@/theme/ThemeProvider";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "@react-navigation/native";
+import { useAuth } from "@/context/AuthContext";
 import {
   House,
   LogIn,
   PlusCircle,
   UserPlus,
   Calendar,
+  CalendarDays,
 } from "lucide-react-native";
 
 export default function TabLayout() {
   const { themeMode } = useThemeMode();
   const colors = Colors[themeMode];
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const checkLoginStatus = async () => {
-    try {
-      const loggedInUser = await AsyncStorage.getItem("loggedInUser");
-      console.log(
-        "Checking login status:",
-        loggedInUser ? "User found" : "No user"
-      );
-      if (loggedInUser) {
-        const userData = JSON.parse(loggedInUser);
-        setIsLoggedIn(!!userData.token);
-      } else {
-        setIsLoggedIn(false);
-      }
-    } catch (error) {
-      console.error("Error checking login status:", error);
-      setIsLoggedIn(false);
-    }
-  };
-
-  useEffect(() => {
-    checkLoginStatus();
-  }, []);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      checkLoginStatus();
-    }, [])
-  );
+  const { isLoggedIn } = useAuth();
 
   function CreateTabButton(props: any) {
     return (
@@ -95,7 +66,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="login"
         options={{
-          title: "Discover",
+          title: "Login",
           tabBarIcon: ({ color }) => <LogIn size={24} color={color} />,
           href: isLoggedIn ? null : "/login",
         }}
@@ -113,7 +84,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="signup"
         options={{
-          title: "Events",
+          title: "Signup",
           tabBarIcon: ({ color }) => <Calendar size={24} color={color} />,
           href: isLoggedIn ? null : "/signup",
         }}
@@ -122,8 +93,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="event"
         options={{
-          title: "Profile",
-          tabBarIcon: ({ color }) => <UserPlus size={24} color={color} />,
+          title: "Events",
+          tabBarIcon: ({ color }) => <CalendarDays size={24} color={color} />,
         }}
       />
     </Tabs>

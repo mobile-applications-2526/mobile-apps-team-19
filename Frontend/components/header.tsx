@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -7,13 +7,12 @@ import {
   Image,
   useWindowDimensions,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemedText } from "./themed-text";
-import { Colors } from "@/constants/theme";
 import { useRouter } from "expo-router";
-import { useFocusEffect } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Moon, Sun } from "lucide-react-native";
 import { useThemeMode } from "@/theme/ThemeProvider";
+import { useAuth } from "@/context/AuthContext";
 
 interface HeaderProps {
   title?: string;
@@ -21,86 +20,79 @@ interface HeaderProps {
 
 export function Header({ title = "Recall" }: HeaderProps) {
   const { themeMode, toggleTheme } = useThemeMode();
-  const colors = Colors[themeMode ?? "light"];
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn, logout } = useAuth();
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 600;
   const logoSize = isSmallScreen ? 45 : 60;
   const titleFontSize = isSmallScreen ? 28 : 50;
-
-  useFocusEffect(
-    useCallback(() => {
-      const checkLoginStatus = async () => {
-        const loggedInUser = await AsyncStorage.getItem("loggedInUser");
-        setIsLoggedIn(!!loggedInUser);
-      };
-      checkLoginStatus();
-    }, [])
-  );
 
   const handleLogin = () => {
     router.push("/(tabs)/login");
   };
 
   const handleLogout = async () => {
-    await AsyncStorage.removeItem("loggedInUser");
-    setIsLoggedIn(false);
+    await logout();
     router.replace("/(tabs)/login");
   };
 
   return (
-    <View style={styles.header}>
-      <View style={styles.titleContainer}>
-        <Pressable
-          onPress={() => router.push("/(tabs)")}
-          style={styles.pressableContent}
-        >
-          <Image
-            source={require("../assets/logo/Logo.png")}
-            style={[styles.logo, { width: logoSize, height: logoSize }]}
-            resizeMode="contain"
-          />
-          <ThemedText
-            type="title"
-            style={[styles.titleText, { fontSize: titleFontSize }]}
+    <SafeAreaView edges={["top"]} style={styles.safeArea}>
+      <View style={styles.header}>
+        <View style={styles.titleContainer}>
+          <Pressable
+            onPress={() => router.push("/(tabs)")}
+            style={styles.pressableContent}
           >
-            {title}
-          </ThemedText>
-        </Pressable>
-      </View>
+            <Image
+              source={require("../assets/logo/Logo.png")}
+              style={[styles.logo, { width: logoSize, height: logoSize }]}
+              resizeMode="contain"
+            />
+            <ThemedText
+              type="title"
+              style={[styles.titleText, { fontSize: titleFontSize }]}
+            >
+              {title}
+            </ThemedText>
+          </Pressable>
+        </View>
 
-      <View style={styles.actions}>
-        <Pressable
-          onPress={toggleTheme}
-          style={({ pressed }) => [
-            styles.themeButton,
-            pressed && { opacity: 0.85 },
-            { backgroundColor: themeMode === "dark" ? "#1F2937" : "#F3F4F6" },
-          ]}
-        >
-          {themeMode === "dark" ? (
-            <Moon size={18} color="#FCD34D" />
+        <View style={styles.actions}>
+          <Pressable
+            onPress={toggleTheme}
+            style={({ pressed }) => [
+              styles.themeButton,
+              pressed && { opacity: 0.85 },
+              { backgroundColor: themeMode === "dark" ? "#1F2937" : "#F3F4F6" },
+            ]}
+          >
+            {themeMode === "dark" ? (
+              <Moon size={18} color="#FCD34D" />
+            ) : (
+              <Sun size={18} color="#F59E0B" />
+            )}
+          </Pressable>
+
+          {isLoggedIn ? (
+            <Pressable onPress={handleLogout} style={styles.logoutButton}>
+              <Text style={styles.logoutText}>Logout</Text>
+            </Pressable>
           ) : (
-            <Sun size={18} color="#F59E0B" />
+            <Pressable onPress={handleLogin} style={styles.loginButton}>
+              <Text style={styles.loginText}>Login</Text>
+            </Pressable>
           )}
-        </Pressable>
-
-        {isLoggedIn ? (
-          <Pressable onPress={handleLogout} style={styles.logoutButton}>
-            <Text style={styles.logoutText}>Logout</Text>
-          </Pressable>
-        ) : (
-          <Pressable onPress={handleLogin} style={styles.loginButton}>
-            <Text style={styles.loginText}>Login</Text>
-          </Pressable>
-        )}
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: "#7C3AED",
+  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",

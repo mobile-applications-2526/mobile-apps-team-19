@@ -3,6 +3,7 @@ import { ThemedView } from "@/components/themed-view";
 import { Header } from "@/components/header";
 import { useThemeMode } from "@/theme/ThemeProvider";
 import { Colors } from "@/constants/theme";
+import { useAuth } from "@/context/AuthContext";
 import UserService from "@/service/userService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
@@ -26,6 +27,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 600;
+  const { setIsLoggedIn } = useAuth();
 
   const handleLogin = async () => {
     if (!username || !password) {
@@ -50,6 +52,8 @@ export default function LoginScreen() {
         "User saved to AsyncStorage:",
         JSON.stringify(userDataToSave, null, 2)
       );
+
+      setIsLoggedIn(true);
 
       Alert.alert("Success", "Login successful!");
 

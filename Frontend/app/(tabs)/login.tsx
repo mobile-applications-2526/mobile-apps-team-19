@@ -7,6 +7,7 @@ import UserService from "@/service/userService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { useState } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Alert,
   StyleSheet,
@@ -22,6 +23,7 @@ import {
 export default function LoginScreen() {
   const { themeMode } = useThemeMode();
   const colors = Colors[themeMode];
+  const insets = useSafeAreaInsets();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { width } = useWindowDimensions();
@@ -67,7 +69,9 @@ export default function LoginScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <Header />
+      <View style={{ paddingTop: insets.top }}>
+        <Header />
+      </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardView}

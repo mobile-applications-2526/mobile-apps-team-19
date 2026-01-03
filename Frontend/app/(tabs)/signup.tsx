@@ -5,6 +5,7 @@ import { useThemeMode } from "@/theme/ThemeProvider";
 import { Colors } from "@/constants/theme";
 import { router } from "expo-router";
 import { useState } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Alert,
   ScrollView,
@@ -20,6 +21,7 @@ import {
 export default function SignupScreen() {
   const { themeMode } = useThemeMode();
   const colors = Colors[themeMode];
+  const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 600;
   const [firstName, setFirstName] = useState("");
@@ -73,7 +75,9 @@ export default function SignupScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <Header />
+      <View style={{ paddingTop: insets.top }}>
+        <Header />
+      </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardView}

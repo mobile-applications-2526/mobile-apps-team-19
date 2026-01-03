@@ -1,5 +1,6 @@
 import React from "react";
 import { Stack } from "expo-router";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import "react-native-reanimated";
 
 import { AppThemeProvider } from "@/theme/ThemeProvider";
@@ -10,22 +11,24 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   return (
-    <AppThemeProvider>
-      <Stack
-        screenOptions={({ theme }) => ({
-          contentStyle: { backgroundColor: theme.colors.background },
-        })}
-      >
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="modal"
-          options={{ presentation: "modal", title: "Modal" }}
-        />
-        <Stack.Screen
-          name="event-details"
-          options={{ headerShown: false, presentation: "card" }}
-        />
-      </Stack>
-    </AppThemeProvider>
+    <SafeAreaProvider>
+      <AppThemeProvider>
+        <Stack
+          screenOptions={({ theme }) => ({
+            contentStyle: { backgroundColor: theme.colors.background },
+          })}
+        >
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="modal"
+            options={{ presentation: "modal", title: "Modal" }}
+          />
+          <Stack.Screen
+            name="event-details"
+            options={{ headerShown: false, presentation: "card" }}
+          />
+        </Stack>
+      </AppThemeProvider>
+    </SafeAreaProvider>
   );
 }

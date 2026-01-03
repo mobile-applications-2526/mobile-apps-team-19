@@ -1,6 +1,7 @@
 import { Tabs } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HapticTab } from "@/components/haptic-tab";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { Colors } from "@/constants/theme";
@@ -18,6 +19,7 @@ import {
 export default function TabLayout() {
   const { themeMode } = useThemeMode();
   const colors = Colors[themeMode];
+  const insets = useSafeAreaInsets();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const checkLoginStatus = async () => {
@@ -79,9 +81,13 @@ export default function TabLayout() {
           {
             backgroundColor: colors.background,
             borderColor: themeMode === "dark" ? "#1F2937" : "#E5E7EB",
+            paddingBottom: Math.max(insets.bottom, 8),
           },
         ],
         tabBarLabelStyle: styles.label,
+        contentStyle: {
+          paddingTop: insets.top,
+        },
       }}
     >
       <Tabs.Screen

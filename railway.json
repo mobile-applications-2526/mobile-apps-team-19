@@ -1,0 +1,12 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "cd Backend/recall && mvn clean package -DskipTests"
+  },
+  "deploy": {
+    "startCommand": "cd Backend/recall && java -Dserver.port=$PORT -jar target/recall-0.0.1-SNAPSHOT.jar",
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 5
+  }
+}

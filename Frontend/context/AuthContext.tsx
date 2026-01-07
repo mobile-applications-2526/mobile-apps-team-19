@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Platform } from "react-native";
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -14,6 +15,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const checkLoginStatus = async () => {
+    // Skip on SSR
+    if (Platform.OS === 'web' && typeof window === 'undefined') {
+      return;
+    }
+    
     try {
       const loggedInUser = await AsyncStorage.getItem("loggedInUser");
       setIsLoggedIn(!!loggedInUser);
@@ -24,6 +30,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = async () => {
+    // Skip on SSR
+    if (Platform.OS === 'web' && typeof window === 'undefined') {
+      return;
+    }
+    
     try {
       await AsyncStorage.removeItem("loggedInUser");
       setIsLoggedIn(false);
@@ -33,6 +44,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    // Skip on server-side rendering
+    if (Platform.OS === 'web' && typeof window === 'undefined') {
+      return;
+    }
+    
     checkLoginStatus();
   }, []);
 

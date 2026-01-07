@@ -8,7 +8,7 @@ import { type Event } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -18,6 +18,7 @@ import {
   Text,
   TextInput,
   View,
+  Platform,
 } from "react-native";
 import { useAuth } from "@/context/AuthContext";
 import { useThemeMode } from "@/theme/ThemeProvider";
@@ -162,6 +163,14 @@ export default function EventScreen() {
   };
 
   const loadUserAndFetchEvents = async () => {
+    // Skip on SSR/web initial render
+    if (Platform.OS === 'web' && typeof window === 'undefined') {
+      return;
+    }    // Skip on server-side
+    if (Platform.OS === 'web' && typeof window === 'undefined') {
+      setLoading(false);
+      return;
+    }    
     try {
       const loggedInUser = await AsyncStorage.getItem("loggedInUser");
       let username = null;
@@ -180,9 +189,23 @@ export default function EventScreen() {
     }
   };
 
+  // Use useEffect instead of useFocusEffect to avoid SSR issues
+  useEffect(() => {
+    // Skip on server-side
+    if (Platform.OS === 'web' && typeof window === 'undefined') {
+      setLoading(false);
+      return;
+    }
+    
+    loadUserAndFetchEvents();
+  }, []);
+
+  // Also refresh on focus (but not on SSR)
   useFocusEffect(
     useCallback(() => {
-      loadUserAndFetchEvents();
+      if (Platform.OS !== 'web' || typeof window !== 'undefined') {
+        loadUserAndFetchEvents();
+      }
     }, [])
   );
 

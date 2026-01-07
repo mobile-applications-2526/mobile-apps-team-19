@@ -1,0 +1,22 @@
+{
+  "user": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "username": "johndoe",
+    "email": "john.doe@email.com",
+    "password": "password123"
+  },
+  "testUser": {
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "username": "janesmith",
+    "email": "jane.smith@email.com",
+    "password": "password123"
+  },
+  "event": {
+    "title": "Team Meeting",
+    "description": "Monthly team sync meeting",
+    "date": "2026-02-15",
+    "location": "Conference Room A"
+  }
+}

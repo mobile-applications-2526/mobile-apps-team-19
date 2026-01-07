@@ -1,124 +1,124 @@
-import React from 'react';
-import { StyleSheet, View, Text, Pressable, Image } from 'react-native';
-import { useColorScheme } from '@/hooks/use-color-scheme';
-import { Colors } from '@/constants/theme';
+import { Colors } from "@/constants/theme";
+import { useThemeMode } from "@/theme/ThemeProvider";
+import React from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { ThemedText } from "@/components/themed-text";
 
 export type Event = {
-    id: string;
-    title: string;
-    dateRange: string;
-    location?: string;
-    photoCount: number;
-    thumbnails: string[]; 
+  id: string;
+  title: string;
+  date?: string;
+  dateRange?: string;
+  location?: string;
+  photoCount?: number;
+  description?: string;
+  usernames?: string[];
 };
 
 type EventCardProps = {
-    event: Event;
-    onPress: () => void;
+  event: Event;
+  onPress: () => void;
 };
 
 export function EventCard({ event, onPress }: EventCardProps) {
-    const colorScheme = useColorScheme();
-    const colors = Colors[colorScheme ?? 'light'];
+  const { themeMode } = useThemeMode();
+  const colors = Colors[themeMode];
+  const accent = "#d946ef";
+  const surface = themeMode === "dark" ? "#1f1f24" : "#ffffff";
+  const border = themeMode === "dark" ? "#2d2d33" : "#e5e7eb";
+  const muted = themeMode === "dark" ? "#9BA1A6" : "#555";
 
-    return (
-        <Pressable
-            style={({ pressed }) => [
-                styles.card,
-                { backgroundColor: colors.background },
-                pressed && styles.cardPressed,
-            ]}
-            onPress={onPress}>
-            <View style={styles.thumbnailContainer}>
-                {event.thumbnails.slice(0, 4).map((thumb, index) => (
-                    <View
-                        key={index}
-                        style={[
-                            styles.thumbnail,
-                            { backgroundColor: colors.icon + '20' },
-                        ]}>
-                        {thumb ? (
-                            <Image source={{ uri: thumb }} style={styles.thumbnailImage} />
-                        ) : (
-                            <Text style={[styles.placeholderText, { color: colors.icon }]}>
-                                📷
-                            </Text>
-                        )}
-                    </View>
-                ))}
-            </View>
+  const displayDate = event.dateRange || event.date || "Date not set";
+  const photoInfo =
+    event.photoCount !== undefined
+      ? `${event.photoCount} ${event.photoCount === 1 ? "photo" : "photos"}`
+      : null;
 
-            <View style={styles.details}>
-                <Text style={[styles.title, { color: colors.text }]} numberOfLines={1}>
-                    {event.title}
-                </Text>
-                <Text style={[styles.meta, { color: colors.icon }]}>
-                    {event.photoCount} {event.photoCount === 1 ? 'photo' : 'photos'} · {event.dateRange}
-                </Text>
-                {event.location && (
-                    <Text style={[styles.location, { color: colors.icon }]} numberOfLines={1}>
-                        📍 {event.location}
-                    </Text>
-                )}
-            </View>
-        </Pressable>
-    );
+  return (
+    <Pressable
+      style={({ pressed }) => [
+        styles.card,
+        {
+          backgroundColor: surface,
+          borderColor: border,
+          shadowColor: themeMode === "dark" ? "#000" : accent,
+        },
+        pressed && styles.cardPressed,
+      ]}
+      onPress={onPress}
+    >
+      <View style={styles.iconPill}>
+        <Text style={[styles.iconText, { color: accent }]}>📅</Text>
+      </View>
+
+      <View style={styles.details}>
+        <ThemedText
+          style={[styles.title, { color: colors.text }]}
+          numberOfLines={1}
+        >
+          {event.title}
+        </ThemedText>
+        <ThemedText style={[styles.meta, { color: muted }]}>
+          {photoInfo ? `${photoInfo} · ${displayDate}` : displayDate}
+        </ThemedText>
+        {event.location && (
+          <ThemedText
+            style={[styles.location, { color: muted }]}
+            numberOfLines={1}
+          >
+            📍 {event.location}
+          </ThemedText>
+        )}
+      </View>
+    </Pressable>
+  );
 }
 
 const styles = StyleSheet.create({
-    card: {
-        flexDirection: 'row',
-        padding: 16,
-        marginHorizontal: 16,
-        marginVertical: 8,
-        borderRadius: 12,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
-    },
-    cardPressed: {
-        opacity: 0.7,
-    },
-    thumbnailContainer: {
-        width: 100,
-        height: 100,
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 2,
-        marginRight: 16,
-    },
-    thumbnail: {
-        width: 48,
-        height: 48,
-        borderRadius: 6,
-        justifyContent: 'center',
-        alignItems: 'center',
-        overflow: 'hidden',
-    },
-    thumbnailImage: {
-        width: '100%',
-        height: '100%',
-    },
-    placeholderText: {
-        fontSize: 20,
-    },
-    details: {
-        flex: 1,
-        justifyContent: 'center',
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: '600',
-        marginBottom: 4,
-    },
-    meta: {
-        fontSize: 14,
-        marginBottom: 2,
-    },
-    location: {
-        fontSize: 13,
-        marginTop: 4,
-    },
+  card: {
+    flexDirection: "row",
+    padding: 16,
+    marginHorizontal: 16,
+    marginVertical: 8,
+    borderRadius: 14,
+    borderWidth: 1,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    elevation: 2,
+    alignItems: "center",
+    gap: 12,
+  },
+  cardPressed: {
+    opacity: 0.7,
+    transform: [{ scale: 0.98 }],
+  },
+  iconPill: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    backgroundColor: "#d946ef1a",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  iconText: {
+    fontSize: 28,
+  },
+  details: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 4,
+  },
+  meta: {
+    fontSize: 14,
+    marginBottom: 2,
+  },
+  location: {
+    fontSize: 13,
+    marginTop: 4,
+  },
 });

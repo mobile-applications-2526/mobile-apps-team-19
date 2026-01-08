@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { tokenManager } from "@/utils/tokenManager";
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -15,8 +15,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const checkLoginStatus = async () => {
     try {
-      const loggedInUser = await AsyncStorage.getItem("loggedInUser");
-      setIsLoggedIn(!!loggedInUser);
+      const isAuth = await tokenManager.isAuthenticated();
+      setIsLoggedIn(isAuth);
     } catch (error) {
       console.error("Error checking login status:", error);
       setIsLoggedIn(false);
@@ -25,7 +25,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = async () => {
     try {
-      await AsyncStorage.removeItem("loggedInUser");
+      await tokenManager.removeToken();
       setIsLoggedIn(false);
     } catch (error) {
       console.error("Error logging out:", error);

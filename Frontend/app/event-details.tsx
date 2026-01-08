@@ -2,6 +2,7 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { Header } from "@/components/header";
 import { Colors } from "@/constants/theme";
+import { getEvents } from "@/service/eventService";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import {
@@ -81,15 +82,7 @@ export default function EventDetailsScreen() {
 
       // Fetch event by name (title is the event name)
       const eventName = title || id;
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_API_URL}/events`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await getEvents();
 
       if (!response.ok) {
         throw new Error(`Failed to fetch event details: ${response.status}`);

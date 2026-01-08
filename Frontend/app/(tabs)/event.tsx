@@ -3,9 +3,9 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { Header } from "@/components/header";
 import { Colors } from "@/constants/theme";
-import { joinEvent } from "@/service/eventService";
+import { getEvents, joinEvent } from "@/service/eventService";
 import { type Event } from "@/types";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { tokenManager } from "@/utils/tokenManager";
 import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
@@ -43,15 +43,7 @@ export default function EventScreen() {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(
-        process.env.EXPO_PUBLIC_API_URL + "/events",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await getEvents();
 
       if (!response.ok) {
         throw new Error(`Failed to fetch events: ${response.status}`);
@@ -163,11 +155,8 @@ export default function EventScreen() {
 
   const loadUserAndFetchEvents = async () => {
     try {
-      const loggedInUser = await AsyncStorage.getItem("loggedInUser");
-      let username = null;
-      if (loggedInUser) {
-        const userData = JSON.parse(loggedInUser);
-        username = userData.username;
+      const username = await tokenManager.getUsername();
+      if (username) {
         setCurrentUsername(username);
         console.log("Filtering events for user:", username);
       } else {

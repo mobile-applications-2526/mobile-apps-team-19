@@ -1,3 +1,5 @@
+import { tokenManager } from "@/utils/tokenManager";
+
 const SUPABASE_URL = "https://xbkaijymsgwlqwxibdqt.supabase.co";
 const BUCKET = "test-imgs";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhia2Fpanltc2d3bHF3eGliZHF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ5OTI5OTUsImV4cCI6MjA4MDU2ODk5NX0.ZDK-OhtWyXjSO-U40d3voA-IfGKkrvrd2WykGWBBgK8";
@@ -57,15 +59,21 @@ export async function savePictureToBackend(
     pictureUrl: string
 ): Promise<void> {
     try {
+        const token = await tokenManager.getToken();
+        const headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        
+        if (token) {
+            headers.set("Authorization", `Bearer ${token}`);
+        }
 
         const encodedEventName = encodeURIComponent(eventName);
         const response = await fetch(
             `${process.env.EXPO_PUBLIC_API_URL}/events/${encodedEventName}/add-picture`,
             {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers,
                 body: JSON.stringify({ url: pictureUrl }),
             }
         );

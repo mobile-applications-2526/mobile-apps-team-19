@@ -346,6 +346,7 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     textAlign: "center",
     marginBottom: 12,
+    paddingTop: 10,
   },
   heroSubtitle: {
     fontSize: 16,

@@ -4,10 +4,7 @@ const TOKEN_KEY = "auth_token";
 const USERNAME_KEY = "username";
 
 export const tokenManager = {
-  async saveToken(
-    token: string,
-    username?: string
-  ): Promise<void> {
+  async saveToken(token: string, username?: string): Promise<void> {
     try {
       await AsyncStorage.setItem(TOKEN_KEY, token);
       if (username) {

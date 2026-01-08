@@ -1,9 +1,11 @@
 import { EventCard } from "@/components/event-card";
+import { Header } from "@/components/header";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { Header } from "@/components/header";
 import { Colors } from "@/constants/theme";
-import { getEvents, joinEvent } from "@/service/eventService";
+import { useAuth } from "@/context/AuthContext";
+import { deleteEvent, getEvents, joinEvent } from "@/service/eventService";
+import { useThemeMode } from "@/theme/ThemeProvider";
 import { type Event } from "@/types";
 import { tokenManager } from "@/utils/tokenManager";
 import { useFocusEffect } from "@react-navigation/native";
@@ -19,8 +21,6 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { useAuth } from "@/context/AuthContext";
-import { useThemeMode } from "@/theme/ThemeProvider";
 
 export default function EventScreen() {
   const [allEvents, setAllEvents] = useState<Event[]>([]);
@@ -126,8 +126,8 @@ export default function EventScreen() {
         // Filter events to show only those where the current user is a member
         const userEvents = username
           ? mappedEvents.filter(
-              (event) => event.usernames && event.usernames.includes(username)
-            )
+            (event) => event.usernames && event.usernames.includes(username)
+          )
           : mappedEvents;
 
         console.log(
@@ -219,9 +219,9 @@ export default function EventScreen() {
       // If search is empty, show user's events
       const userEvents = currentUsername
         ? allEvents.filter(
-            (event) =>
-              event.usernames && event.usernames.includes(currentUsername)
-          )
+          (event) =>
+            event.usernames && event.usernames.includes(currentUsername)
+        )
         : allEvents;
       setFilteredEvents(userEvents);
       setShowAllEvents(false);
@@ -239,8 +239,41 @@ export default function EventScreen() {
     setShowAllEvents(true);
   };
 
+  const handleDeleteEvent = async (event: Event) => {
+    Alert.alert(
+      "Delete Event",
+      `Are you sure you want to delete "${event.title}"?`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              const response = await deleteEvent(event.title);
+
+              if (!response.ok) {
+                throw new Error(`Failed to delete event: ${response.status}`);
+              }
+
+              console.log("Successfully deleted event:", event.title);
+
+              Alert.alert("Success", "Event deleted successfully");
+            } catch (error) {
+              console.error("Error deleting event:", error);
+              Alert.alert("Error", "Failed to delete event. Please try again.");
+            }
+          },
+        },
+      ]
+    );
+  }
+
   const handleJoinEvent = async (event: Event) => {
-    console.log("handleJoinEvent called with event:", event);
+
 
     if (!currentUsername) {
       console.log("No current username found");
@@ -361,7 +394,11 @@ export default function EventScreen() {
             item.usernames.includes(currentUsername);
           return (
             <View>
-              <EventCard event={item} onPress={() => handleEventPress(item)} />
+              <EventCard
+                event={item}
+                onPress={() => handleEventPress(item)}
+                onLongPress={() => handleDeleteEvent(item)}
+              />
               {showAllEvents && !isMember && (
                 <Pressable
                   style={[styles.joinButton, { backgroundColor: accent }]}

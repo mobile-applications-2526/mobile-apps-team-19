@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { tokenManager } from "@/utils/tokenManager";
+import { Platform } from "react-native";
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -14,6 +15,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const checkLoginStatus = async () => {
+    // Skip on SSR
+    if (Platform.OS === 'web' && typeof window === 'undefined') {
+      return;
+    }
+    
     try {
       const isAuth = await tokenManager.isAuthenticated();
       setIsLoggedIn(isAuth);
@@ -24,6 +30,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = async () => {
+    // Skip on SSR
+    if (Platform.OS === 'web' && typeof window === 'undefined') {
+      return;
+    }
+    
     try {
       await tokenManager.removeToken();
       setIsLoggedIn(false);
@@ -33,6 +44,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    // Skip on server-side rendering
+    if (Platform.OS === 'web' && typeof window === 'undefined') {
+      return;
+    }
+    
     checkLoginStatus();
   }, []);
 

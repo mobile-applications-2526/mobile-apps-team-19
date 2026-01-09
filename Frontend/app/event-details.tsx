@@ -1,11 +1,15 @@
+import { Header } from "@/components/header";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { Header } from "@/components/header";
 import { Colors } from "@/constants/theme";
+import { deletePictureFromEvent, getEvents } from "@/service/eventService";
+import { useThemeMode } from "@/theme/ThemeProvider";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { Camera } from "lucide-react-native";
 import { useCallback, useMemo, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Dimensions,
   Image,
   Pressable,
@@ -13,9 +17,8 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { useThemeMode } from "@/theme/ThemeProvider";
-import { Camera } from "lucide-react-native";
 type Picture = {
+  id?: number;
   url: string;
   tags: string;
 };
@@ -81,15 +84,7 @@ export default function EventDetailsScreen() {
 
       // Fetch event by name (title is the event name)
       const eventName = title || id;
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_API_URL}/events`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await getEvents();
 
       if (!response.ok) {
         throw new Error(`Failed to fetch event details: ${response.status}`);
@@ -124,9 +119,9 @@ export default function EventDetailsScreen() {
       // Find the specific event by name
       const eventData = Array.isArray(allEvents)
         ? allEvents.find(
-            (e) =>
-              e.name === eventName || e.name === decodeURIComponent(eventName)
-          )
+          (e) =>
+            e.name === eventName || e.name === decodeURIComponent(eventName)
+        )
         : allEvents;
 
       if (!eventData) {
@@ -169,6 +164,51 @@ export default function EventDetailsScreen() {
 
   const closeImageFullscreen = () => {
     setSelectedImage(null);
+  };
+
+  const handleDeleteImage = (picture: Picture, index: number) => {
+    Alert.alert(
+      "Delete Photo",
+      "Are you sure you want to delete this photo?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              if (!picture.id) {
+                Alert.alert("Error", "Cannot delete: picture ID missing");
+                return;
+              }
+
+              console.log("Picture object:", picture);
+              console.log("Deleting image with ID:", picture.id);
+              console.log("Picture URL:", picture.url);
+
+              const response = await deletePictureFromEvent(picture.id);
+
+              if (!response.ok) {
+                throw new Error(`Failed to delete image: ${response.status}`);
+              }
+
+              if (event) {
+                const updatedPictures = event.pictures.filter((_, i) => i !== index);
+                setEvent({ ...event, pictures: updatedPictures });
+              }
+
+              Alert.alert("Success", "Photo deleted successfully");
+            } catch (error) {
+              console.error("Error deleting image:", error);
+              Alert.alert("Error", "Failed to delete photo. Please try again.");
+            }
+          },
+        },
+      ]
+    );
   };
 
   const handleCameraPress = () => {
@@ -274,6 +314,7 @@ export default function EventDetailsScreen() {
                 <Pressable
                   key={index}
                   onPress={() => openImageFullscreen(picture.url)}
+                  onLongPress={() => handleDeleteImage(picture, index)}
                   style={[
                     styles.imageContainer,
                     {

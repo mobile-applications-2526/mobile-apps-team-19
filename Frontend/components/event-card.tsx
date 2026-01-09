@@ -1,8 +1,8 @@
+import { ThemedText } from "@/components/themed-text";
 import { Colors } from "@/constants/theme";
 import { useThemeMode } from "@/theme/ThemeProvider";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { ThemedText } from "@/components/themed-text";
 
 export type Event = {
   id: string;
@@ -18,9 +18,10 @@ export type Event = {
 type EventCardProps = {
   event: Event;
   onPress: () => void;
+  onLongPress?: () => void;
 };
 
-export function EventCard({ event, onPress }: EventCardProps) {
+export function EventCard({ event, onPress, onLongPress }: EventCardProps) {
   const { themeMode } = useThemeMode();
   const colors = Colors[themeMode];
   const accent = "#d946ef";
@@ -46,6 +47,7 @@ export function EventCard({ event, onPress }: EventCardProps) {
         pressed && styles.cardPressed,
       ]}
       onPress={onPress}
+      onLongPress={onLongPress}
     >
       <View style={styles.iconPill}>
         <Text style={[styles.iconText, { color: accent }]}>📅</Text>

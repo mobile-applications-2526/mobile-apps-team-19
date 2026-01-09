@@ -5,9 +5,10 @@ import { useThemeMode } from "@/theme/ThemeProvider";
 import { Colors } from "@/constants/theme";
 import { useAuth } from "@/context/AuthContext";
 import UserService from "@/service/userService";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { tokenManager } from "@/utils/tokenManager";
 import { router } from "expo-router";
 import { useState } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Alert,
   StyleSheet,
@@ -23,6 +24,7 @@ import {
 export default function LoginScreen() {
   const { themeMode } = useThemeMode();
   const colors = Colors[themeMode];
+  const insets = useSafeAreaInsets();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { width } = useWindowDimensions();
@@ -39,19 +41,8 @@ export default function LoginScreen() {
       const result = await UserService.loginUser({ username, password });
       console.log("Login result:", JSON.stringify(result, null, 2));
 
-      const userDataToSave = {
-        token: result.token,
-        username: result.username,
-      };
-
-      await AsyncStorage.setItem(
-        "loggedInUser",
-        JSON.stringify(userDataToSave)
-      );
-      console.log(
-        "User saved to AsyncStorage:",
-        JSON.stringify(userDataToSave, null, 2)
-      );
+      // Save token and username using tokenManager
+      await tokenManager.saveToken(result.token, result.username);
 
       setIsLoggedIn(true);
 

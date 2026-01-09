@@ -29,7 +29,7 @@ export function CreateEventForm({ onSuccess, onCancel }: CreateEventFormProps) {
 
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
-  const [hostName, setHostName] = useState("");
+  // const [hostName, setHostName] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [location, setLocation] = useState("");
@@ -45,10 +45,10 @@ export function CreateEventForm({ onSuccess, onCancel }: CreateEventFormProps) {
       Alert.alert("Error", "Date is required (format: YYYY-MM-DD)");
       return;
     }
-    if (!hostName.trim()) {
-      Alert.alert("Error", "Host name is required");
-      return;
-    }
+    // if (!hostName.trim()) {
+    //   Alert.alert("Error", "Host name is required");
+    //   return;
+    // }
     if (!startTime.trim()) {
       Alert.alert("Error", "Start time is required (format: HH:MM)");
       return;
@@ -85,7 +85,7 @@ export function CreateEventForm({ onSuccess, onCancel }: CreateEventFormProps) {
     const eventData: CreateEventData = {
       name: name.trim(),
       date: date.trim(),
-      hostName: hostName.trim(),
+      // hostName: hostName.trim(),
       startTime:
         startTime.includes(":") && startTime.split(":").length === 2
           ? `${startTime}:00`
@@ -114,7 +114,7 @@ export function CreateEventForm({ onSuccess, onCancel }: CreateEventFormProps) {
       // Reset form
       setName("");
       setDate("");
-      setHostName("");
+      // setHostName("");
       setStartTime("");
       setEndTime("");
       setLocation("");
@@ -209,7 +209,7 @@ export function CreateEventForm({ onSuccess, onCancel }: CreateEventFormProps) {
               />
             </View>
 
-            <View style={styles.inputGroup}>
+            {/* <View style={styles.inputGroup}>
               <Text
                 style={[
                   styles.label,
@@ -235,7 +235,7 @@ export function CreateEventForm({ onSuccess, onCancel }: CreateEventFormProps) {
                 placeholderTextColor={colors.icon}
                 editable={!isSubmitting}
               />
-            </View>
+            </View> */}
 
             <View style={styles.inputGroup}>
               <Text

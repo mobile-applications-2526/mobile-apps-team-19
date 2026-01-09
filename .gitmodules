@@ -1,0 +1,3 @@
+[submodule "Real-Backend"]
+	path = Real-Backend
+	url = https://github.com/Austyne/events-photo-mobileapp-backend.git

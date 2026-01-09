@@ -25,8 +25,33 @@ const loginUser = async (user: User) => {
     }
 };
 
+const signupUser = async (user: User) => {
+    try {
+        const response = await fetch(process.env.EXPO_PUBLIC_API_URL + "/users/signup", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(user),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.text();
+            console.error("Server error response:", errorData);
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error("Signup error:", error);
+        throw error;
+    }
+};
+
 const UserService = {
     loginUser,
+    signupUser,
 };
 
 export default UserService;

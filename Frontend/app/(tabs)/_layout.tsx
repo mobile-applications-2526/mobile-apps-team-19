@@ -1,19 +1,16 @@
-import { Tabs } from "expo-router";
-import React, { useState } from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
-import { HapticTab } from "@/components/haptic-tab";
-import { IconSymbol } from "@/components/ui/icon-symbol";
 import { Colors } from "@/constants/theme";
-import { useThemeMode } from "@/theme/ThemeProvider";
 import { useAuth } from "@/context/AuthContext";
+import { useThemeMode } from "@/theme/ThemeProvider";
+import { Tabs } from "expo-router";
 import {
+  Calendar,
+  CalendarDays,
   House,
   LogIn,
   PlusCircle,
-  UserPlus,
-  Calendar,
-  CalendarDays,
 } from "lucide-react-native";
+import React from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function TabLayout() {
   const { themeMode } = useThemeMode();

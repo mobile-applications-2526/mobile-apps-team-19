@@ -9,8 +9,8 @@ export type User = {
 
 export type Event = {
     id: string;
-    eventId?: number; // Numeric ID for backend operations
-    eventName?: string; // Event name as fallback identifier
+    eventId?: number;
+    eventName?: string; 
     title: string;
     date?: string;
     dateRange?: string;

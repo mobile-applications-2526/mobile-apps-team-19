@@ -1,29 +1,26 @@
 import { Header } from "@/components/header";
-import { ThemedView } from "@/components/themed-view";
 import { ThemedText } from "@/components/themed-text";
-import { useRouter } from "expo-router";
+import { ThemedView } from "@/components/themed-view";
+import { Colors } from "@/constants/theme";
 import { useAuth } from "@/context/AuthContext";
 import { useThemeMode } from "@/theme/ThemeProvider";
-import { Colors } from "@/constants/theme";
-import React from "react";
+import { useRouter } from "expo-router";
 import {
-  StyleSheet,
-  ScrollView,
-  Pressable,
-  View,
-  Image,
-  Dimensions,
-  FlatList,
-} from "react-native";
-import {
+  ArrowRight,
   Camera,
-  Users,
   Clock,
   Heart,
   Shield,
+  Users,
   Zap,
-  ArrowRight,
 } from "lucide-react-native";
+import React from "react";
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View
+} from "react-native";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -70,46 +67,6 @@ export default function HomeScreen() {
     },
   ];
 
-  const FeatureCard = ({
-    icon: Icon,
-    title,
-    description,
-  }: {
-    icon: any;
-    title: string;
-    description: string;
-  }) => (
-    <View
-      style={[
-        styles.featureCard,
-        {
-          backgroundColor: themeMode === "dark" ? "#1F2937" : "#F3F4F6",
-          borderColor: themeMode === "dark" ? "#374151" : "#E5E7EB",
-        },
-      ]}
-    >
-      <View
-        style={[
-          styles.iconCircle,
-          { backgroundColor: themeMode === "dark" ? "#7C3AED" : "#EDE9FE" },
-        ]}
-      >
-        <Icon
-          size={24}
-          color={themeMode === "dark" ? "#FFF" : "#7C3AED"}
-          strokeWidth={2}
-        />
-      </View>
-      <ThemedText
-        style={styles.featureTitle}
-        type="subtitle"
-      >
-        {title}
-      </ThemedText>
-      <ThemedText style={styles.featureDescription}>{description}</ThemedText>
-    </View>
-  );
-
   return (
     <ThemedView style={styles.container}>
       <Header />
@@ -126,7 +83,7 @@ export default function HomeScreen() {
             Bring everyone's photos together. No chaos. No duplicates.
           </ThemedText>
 
-          {/* CTA Buttons */}
+          CTA Buttons
           <View style={styles.ctaContainer}>
             {!isLoggedIn ? (
               <>
@@ -174,63 +131,55 @@ export default function HomeScreen() {
           </View>
         </View>
 
-       
-        <View style={styles.showcaseSection}>
-          <View
-            style={[
-              styles.mockupContainer,
-              {
-                backgroundColor: themeMode === "dark" ? "#111827" : "#F9FAFB",
-                borderColor: themeMode === "dark" ? "#374151" : "#E5E7EB",
-              },
-            ]}
-          >
-            <View
-              style={[
-                styles.mockupPhone,
-                {
-                  backgroundColor: themeMode === "dark" ? "#0F172A" : "#FFFFFF",
-                  borderColor: themeMode === "dark" ? "#1F2937" : "#D1D5DB",
-                },
-              ]}
-            >
-              
-              <View style={styles.photoGrid}>
-                {[0, 1, 2, 3, 4, 5].map((i) => (
-                  <View
-                    key={i}
-                    style={[
-                      styles.photoPlaceholder,
-                      {
-                        backgroundColor: `hsl(${
-                          260 + i * 10
-                        }, 80%, 60%)`,
-                        opacity: 0.8,
-                      },
-                    ]}
-                  />
-                ))}
-              </View>
-            </View>
-          </View>
-        </View>
 
-      
+
         <View style={styles.featuresSection}>
           <ThemedText type="subtitle" style={styles.sectionTitle}>
             How It Works
           </ThemedText>
 
-          <View style={styles.featuresGrid}>
-            {features.map((feature) => (
-              <FeatureCard
-                key={feature.id}
-                icon={feature.icon}
-                title={feature.title}
-                description={feature.description}
-              />
-            ))}
-          </View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.pillsContainer}
+          >
+            {features.map((feature) => {
+              const Icon = feature.icon;
+              return (
+                <View
+                  key={feature.id}
+                  style={[
+                    styles.pillCard,
+                    {
+                      backgroundColor:
+                        themeMode === "dark" ? "#1F2937" : "#F3F4F6",
+                      borderColor:
+                        themeMode === "dark" ? "#374151" : "#E5E7EB",
+                    },
+                  ]}
+                >
+                  <View
+                    style={[
+                      styles.pillIcon,
+                      {
+                        backgroundColor:
+                          themeMode === "dark" ? "#7C3AED" : "#EDE9FE",
+                      },
+                    ]}
+                  >
+                    <Icon
+                      size={20}
+                      color={themeMode === "dark" ? "#FFF" : "#7C3AED"}
+                      strokeWidth={2}
+                    />
+                  </View>
+                  <ThemedText style={styles.pillTitle}>
+                    {feature.title}
+                  </ThemedText>
+                </View>
+              );
+            })}
+          </ScrollView>
         </View>
 
 
@@ -301,7 +250,7 @@ export default function HomeScreen() {
           </View>
         </View>
 
-       
+
         {!isLoggedIn && (
           <View style={styles.bottomCtaSection}>
             <ThemedText type="subtitle" style={styles.bottomCtaTitle}>
@@ -322,7 +271,7 @@ export default function HomeScreen() {
           </View>
         )}
 
-     
+
         <View style={{ height: 40 }} />
       </ScrollView>
     </ThemedView>
@@ -386,35 +335,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 16,
   },
-  showcaseSection: {
-    paddingHorizontal: 24,
-    paddingVertical: 40,
-    alignItems: "center",
-  },
-  mockupContainer: {
-    borderRadius: 20,
-    padding: 16,
-    width: "100%",
-    maxWidth: 300,
-    borderWidth: 1,
-  },
-  mockupPhone: {
-    borderRadius: 16,
-    borderWidth: 8,
-    aspectRatio: 9 / 16,
-    overflow: "hidden",
-    padding: 8,
-  },
-  photoGrid: {
-    flex: 1,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-  },
-  photoPlaceholder: {
-    width: "48%",
-    borderRadius: 8,
-  },
   featuresSection: {
     paddingHorizontal: 24,
     paddingVertical: 40,
@@ -425,37 +345,30 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     textAlign: "center",
   },
-  featuresGrid: {
+  pillsContainer: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 16,
-    justifyContent: "space-between",
+    gap: 12,
+    paddingHorizontal: 4,
   },
-  featureCard: {
-    width: "48%",
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
+  pillCard: {
+    flexDirection: "row",
     alignItems: "center",
-  },
-  iconCircle: {
-    width: 48,
-    height: 48,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
     borderRadius: 24,
+    borderWidth: 1,
+    gap: 8,
+  },
+  pillIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 12,
   },
-  featureTitle: {
+  pillTitle: {
     fontSize: 14,
     fontWeight: "600",
-    marginBottom: 4,
-    textAlign: "center",
-  },
-  featureDescription: {
-    fontSize: 12,
-    opacity: 0.7,
-    textAlign: "center",
   },
   stepsSection: {
     paddingHorizontal: 24,

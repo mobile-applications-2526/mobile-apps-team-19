@@ -1,20 +1,21 @@
+import { Header } from "@/components/header";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { Header } from "@/components/header";
-import { useThemeMode } from "@/theme/ThemeProvider";
 import { Colors } from "@/constants/theme";
+import UserService from "@/service/userService";
+import { useThemeMode } from "@/theme/ThemeProvider";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
   Alert,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  View,
-  KeyboardAvoidingView,
-  Platform,
   useWindowDimensions,
+  View,
 } from "react-native";
 
 export default function SignupScreen() {
@@ -40,28 +41,13 @@ export default function SignupScreen() {
     }
 
     try {
-      const response = await fetch(
-        process.env.EXPO_PUBLIC_API_URL + "/users/signup",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            firstName,
-            lastName,
-            username,
-            email,
-            password,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error("Server error response:", errorData);
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      await UserService.signupUser({
+        firstName,
+        lastName,
+        username,
+        email,
+        password,
+      });
 
       Alert.alert("Success", "Account created successfully!");
       router.push("/(tabs)/login");

@@ -1,10 +1,10 @@
-import React from "react";
 import { Stack } from "expo-router";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import React from "react";
 import "react-native-reanimated";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { AppThemeProvider } from "@/theme/ThemeProvider";
 import { AuthProvider } from "@/context/AuthContext";
+import { AppThemeProvider } from "@/theme/ThemeProvider";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -21,10 +21,6 @@ export default function RootLayout() {
             })}
           >
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="modal"
-              options={{ presentation: "modal", title: "Modal" }}
-            />
             <Stack.Screen
               name="event-details"
               options={{ headerShown: false, presentation: "card" }}
